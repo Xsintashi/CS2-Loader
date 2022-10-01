@@ -400,6 +400,9 @@ void GUI::Render() noexcept
 	ImGui::PopID();
 
 
+	if (ImGui::Checkbox("Allow Third Party Software", &cfg->thirdParty))
+		options += "-allow_third_party_software ";
+
 	if (ImGui::Checkbox("High Priority", &cfg->highPriority))
 		options += "-high ";
 
@@ -469,7 +472,6 @@ void GUI::Render() noexcept
 			options += std::string("-fullscreen ");
 			break;
 		case 0:
-			
 			options += std::string("-windowed ");
 			break;
 		case 2:

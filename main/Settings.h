@@ -25,6 +25,7 @@ public:
 	}res;
 
 	bool
+		thirdParty = false,
 		insecure = false,
 		allowDebug = false,
 		hijack = false,
