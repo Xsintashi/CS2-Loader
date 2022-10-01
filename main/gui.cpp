@@ -11,6 +11,10 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
 	LPARAM longParameter
 );
 
+struct Settings {
+
+}s;
+
 long __stdcall WindowProcess(
 	HWND window,
 	UINT message,
@@ -180,7 +184,7 @@ void gui::CreateImGui() noexcept
 
 	io.IniFilename = NULL;
 
-	ImGui::StyleColorsDark();
+	ImGui::StyleColorsVGUI();
 
 	ImGui_ImplWin32_Init(window);
 	ImGui_ImplDX9_Init(device);
@@ -243,15 +247,23 @@ void gui::Render() noexcept
 	ImGui::SetNextWindowPos({ 0, 0 });
 	ImGui::SetNextWindowSize({ WIDTH, HEIGHT });
 	ImGui::Begin(
-		"subscribe to cazzy",
+		"Counter-Strike: Global Offensive",
 		&isRunning,
 		ImGuiWindowFlags_NoResize |
 		ImGuiWindowFlags_NoSavedSettings |
 		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_NoMove
 	);
+	static bool bTest = false;
+	static int iTest = 0;
+	static int iTest2 = 0;
 
-	ImGui::Button("subscribe");
+	ImGui::PushItemWidth(96);
+	ImGui::Button("Button");
+	ImGui::Checkbox("CheckBox", &bTest);
+	ImGui::SliderInt("Slider Int", &iTest, 0, 31);
+	ImGui::Combo("Combo", &iTest2, "jeden\0dwa\0trzy\0cztery\0piec\0");
+	ImGui::PopItemWidth();
 
 	ImGui::End();
 }

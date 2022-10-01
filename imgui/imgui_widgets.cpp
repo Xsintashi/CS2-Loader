@@ -147,6 +147,8 @@ static ImVec2           InputTextCalcTextSizeW(const ImWchar* text_begin, const 
 // - BulletTextV()
 //-------------------------------------------------------------------------
 
+const ImU32 colWhite = 0xFFC1C1C1; const ImU32 colBlack = 0xFF4a5742; const ImU32 colWhiteText = 0xFFD9D9D9;
+
 void ImGui::TextEx(const char* text, const char* text_end, ImGuiTextFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
@@ -679,35 +681,55 @@ bool ImGui::ButtonEx(const char* label, const ImVec2& size_arg, ImGuiButtonFlags
     const ImVec2 label_size = CalcTextSize(label, NULL, true);
 
     ImVec2 pos = window->DC.CursorPos;
-    if ((flags & ImGuiButtonFlags_AlignTextBaseLine) && style.FramePadding.y < window->DC.CurrLineTextBaseOffset) // Try to vertically align buttons that are smaller/have no padding so that text baseline matches (bit hacky, since it shouldn't be a flag)
+    if ((flags & ImGuiButtonFlags_AlignTextBaseLine) && style.FramePadding.y < window->DC.CurrLineTextBaseOffset)
         pos.y += window->DC.CurrLineTextBaseOffset - style.FramePadding.y;
     ImVec2 size = CalcItemSize(size_arg, label_size.x + style.FramePadding.x * 2.0f, label_size.y + style.FramePadding.y * 2.0f);
 
-    const ImRect bb(pos, pos + size);
+
+    ImRect bb(pos, pos + size);
     ItemSize(size, style.FramePadding.y);
     if (!ItemAdd(bb, id))
         return false;
 
+
     if (g.LastItemData.InFlags & ImGuiItemFlags_ButtonRepeat)
         flags |= ImGuiButtonFlags_Repeat;
-
     bool hovered, held;
     bool pressed = ButtonBehavior(bb, id, &hovered, &held, flags);
 
-    // Render
-    const ImU32 col = GetColorU32((held && hovered) ? ImGuiCol_ButtonActive : hovered ? ImGuiCol_ButtonHovered : ImGuiCol_Button);
+
+    if (!held) {
+        RenderFrame(bb.Min - ImVec2(1, 1), bb.Max - ImVec2(0, 0), colWhite, true, style.FrameRounding);
+        RenderFrame(bb.Min + ImVec2(0, 0), bb.Max + ImVec2(1, 1), colBlack, true, style.FrameRounding);
+    }
+    else
+    {
+        RenderFrame(bb.Min - ImVec2(1, 1), bb.Max - ImVec2(0, 0), colBlack, true, style.FrameRounding);
+        RenderFrame(bb.Min + ImVec2(0, 0), bb.Max + ImVec2(1, 1), colWhite, true, style.FrameRounding);
+    }
+
+    const ImU32 col = GetColorU32(ImGuiCol_Button);
     RenderNavHighlight(bb, id);
     RenderFrame(bb.Min, bb.Max, col, true, style.FrameRounding);
 
     if (g.LogEnabled)
         LogSetNextTextDecoration("[", "]");
-    RenderTextClipped(bb.Min + style.FramePadding, bb.Max - style.FramePadding, label, NULL, &label_size, style.ButtonTextAlign, &bb);
 
-    // Automatically close popups
-    //if (pressed && !(flags & ImGuiButtonFlags_DontClosePopups) && (window->Flags & ImGuiWindowFlags_Popup))
-    //    CloseCurrentPopup();
+    if (!held) {
+        RenderTextClipped(bb.Min + style.FramePadding - ImVec2(1, 1), bb.Max - style.FramePadding, label, NULL, &label_size, style.ButtonTextAlign, &bb);
+    }
+    else
+    {
+        RenderTextClipped(bb.Min + style.FramePadding, bb.Max - style.FramePadding + ImVec2(2.0f, 2.0f), label, NULL, &label_size, style.ButtonTextAlign, &bb);
+    }
 
-    IMGUI_TEST_ENGINE_ITEM_INFO(id, label, g.LastItemData.StatusFlags);
+
+
+    IMGUI_TEST_ENGINE_ITEM_INFO(id, label, window->DC.LastItemStatusFlags);
+
+    ImVec2 newpos = window->DC.CursorPos;
+    window->DC.CursorPos = newpos + ImVec2(0, 8.0f);
+
     return pressed;
 }
 

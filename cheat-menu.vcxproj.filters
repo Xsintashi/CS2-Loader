@@ -39,7 +39,7 @@
     <ClInclude Include="imgui\imstb_truetype.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cheat\gui.h">
+    <ClInclude Include="main\gui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -65,11 +65,14 @@
     <ClCompile Include="imgui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cheat\main.cpp">
+    <ClCompile Include="main\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cheat\gui.cpp">
+    <ClCompile Include="main\gui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
 </Project>
