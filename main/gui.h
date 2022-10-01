@@ -1,11 +1,11 @@
 #pragma once
 #include <d3d9.h>
 
-namespace gui
+namespace GUI
 {
 	// constant window size
-	constexpr int WIDTH = 500;
-	constexpr int HEIGHT = 300;
+	constexpr int width = 640;
+	constexpr int height = 480;
 
 	// when this changes, exit threads
 	// and close menu :)

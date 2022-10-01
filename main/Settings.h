@@ -2,25 +2,31 @@
 
 #include <string>
 #include <optional>
+#include <vector>
 
 class Settings {
 public:
-	struct General{
-	std::string
-		path = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Counter-Strike Global Offensive\\csgo.exe",
-		language = "",
-		execConfig = "";
+	char
+		path[256] = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Counter-Strike Global Offensive\\csgo.exe",
+		language[256] = "",
+		execConfig[256] = "";
 
 	int
-		priority = 0,
-		tickrate = 0,
+		tickrate = 64,
 		refresh = 60,
 		threads = 4;
-	;
+
+	struct Resolution {
+		int
+			width = 1024,
+			height = 768,
+			displayMode = 1;
+	}res;
 
 	bool
 		insecure = false,
 		logConsole = false,
+		highPriority = false,
 		noVideo = false,
 		noJoystick = false,
 		consoleOnStartup = false,
@@ -34,16 +40,6 @@ public:
 		noPreload = false,
 		noBrowser = false;
 	;
-
-	struct Display {
-		int
-			displayMode = 1,
-			aspectRatio = 0,
-			resolution = 0;
-	} display;
-
-	} general;
-private:
 };
 
 inline std::optional<Settings> cfg;

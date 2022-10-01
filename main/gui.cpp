@@ -1,6 +1,11 @@
 #include "gui.h"
 #include "Settings.h"
 
+#include <Windows.h>
+#include <WinUser.h>
+
+#include <thread> // for cpu threads counter
+
 #include "../imgui/imgui.h"
 #include "../imgui/imgui_impl_dx9.h"
 #include "../imgui/imgui_impl_win32.h"
@@ -24,11 +29,11 @@ long __stdcall WindowProcess(
 	switch (message)
 	{
 	case WM_SIZE: {
-		if (gui::device && wideParameter != SIZE_MINIMIZED)
+		if (GUI::device && wideParameter != SIZE_MINIMIZED)
 		{
-			gui::presentParameters.BackBufferWidth = LOWORD(longParameter);
-			gui::presentParameters.BackBufferHeight = HIWORD(longParameter);
-			gui::ResetDevice();
+			GUI::presentParameters.BackBufferWidth = LOWORD(longParameter);
+			GUI::presentParameters.BackBufferHeight = HIWORD(longParameter);
+			GUI::ResetDevice();
 		}
 	}return 0;
 
@@ -42,7 +47,7 @@ long __stdcall WindowProcess(
 	}return 0;
 
 	case WM_LBUTTONDOWN: {
-		gui::position = MAKEPOINTS(longParameter); // set click points
+		GUI::position = MAKEPOINTS(longParameter); // set click points
 	}return 0;
 
 	case WM_MOUSEMOVE: {
@@ -51,16 +56,16 @@ long __stdcall WindowProcess(
 			const auto points = MAKEPOINTS(longParameter);
 			auto rect = ::RECT{ };
 
-			GetWindowRect(gui::window, &rect);
+			GetWindowRect(GUI::window, &rect);
 
-			rect.left += points.x - gui::position.x;
-			rect.top += points.y - gui::position.y;
+			rect.left += points.x - GUI::position.x;
+			rect.top += points.y - GUI::position.y;
 
-			if (gui::position.x >= 0 &&
-				gui::position.x <= gui::WIDTH &&
-				gui::position.y >= 0 && gui::position.y <= 19)
+			if (GUI::position.x >= 0 &&
+				GUI::position.x <= GUI::width &&
+				GUI::position.y >= 0 && GUI::position.y <= 19)
 				SetWindowPos(
-					gui::window,
+					GUI::window,
 					HWND_TOPMOST,
 					rect.left,
 					rect.top,
@@ -76,7 +81,7 @@ long __stdcall WindowProcess(
 	return DefWindowProc(window, message, wideParameter, longParameter);
 }
 
-void gui::CreateHWindow(const char* windowName) noexcept
+void GUI::CreateHWindow(const char* windowName) noexcept
 {
 	windowClass.cbSize = sizeof(WNDCLASSEX);
 	windowClass.style = CS_CLASSDC;
@@ -97,11 +102,11 @@ void gui::CreateHWindow(const char* windowName) noexcept
 		0,
 		"class001",
 		windowName,
-		WS_POPUP,
+		WS_POPUP, //WS_SYSMENU with win10 title bar
 		100,
 		100,
-		WIDTH,
-		HEIGHT,
+		width,
+		height,
 		0,
 		0,
 		windowClass.hInstance,
@@ -112,13 +117,13 @@ void gui::CreateHWindow(const char* windowName) noexcept
 	UpdateWindow(window);
 }
 
-void gui::DestroyHWindow() noexcept
+void GUI::DestroyHWindow() noexcept
 {
 	DestroyWindow(window);
 	UnregisterClass(windowClass.lpszClassName, windowClass.hInstance);
 }
 
-bool gui::CreateDevice() noexcept
+bool GUI::CreateDevice() noexcept
 {
 	d3d = Direct3DCreate9(D3D_SDK_VERSION);
 
@@ -146,7 +151,7 @@ bool gui::CreateDevice() noexcept
 	return true;
 }
 
-void gui::ResetDevice() noexcept
+void GUI::ResetDevice() noexcept
 {
 	ImGui_ImplDX9_InvalidateDeviceObjects();
 
@@ -158,7 +163,7 @@ void gui::ResetDevice() noexcept
 	ImGui_ImplDX9_CreateDeviceObjects();
 }
 
-void gui::DestroyDevice() noexcept
+void GUI::DestroyDevice() noexcept
 {
 	if (device)
 	{
@@ -173,7 +178,7 @@ void gui::DestroyDevice() noexcept
 	}
 }
 
-void gui::CreateImGui() noexcept
+void GUI::CreateImGui() noexcept
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -187,14 +192,14 @@ void gui::CreateImGui() noexcept
 	ImGui_ImplDX9_Init(device);
 }
 
-void gui::DestroyImGui() noexcept
+void GUI::DestroyImGui() noexcept
 {
 	ImGui_ImplDX9_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 }
 
-void gui::BeginRender() noexcept
+void GUI::BeginRender() noexcept
 {
 	MSG message;
 	while (PeekMessage(&message, 0, 0, 0, PM_REMOVE))
@@ -215,7 +220,7 @@ void gui::BeginRender() noexcept
 	ImGui::NewFrame();
 }
 
-void gui::EndRender() noexcept
+void GUI::EndRender() noexcept
 {
 	ImGui::EndFrame();
 
@@ -239,26 +244,61 @@ void gui::EndRender() noexcept
 		ResetDevice();
 }
 
-void gui::Render() noexcept
+void GUI::Render() noexcept
 {
-	cfg.emplace(Settings{});
-	
+	constexpr int spacing = 80;
+	int processorCount = std::thread::hardware_concurrency();
+
 	ImGui::SetNextWindowPos({ 0, 0 });
-	ImGui::SetNextWindowSize({ WIDTH, HEIGHT });
-	ImGui::Begin(
-		"Counter-Strike: Global Offensive",
-		&isRunning,
-		ImGuiWindowFlags_NoResize |
-		ImGuiWindowFlags_NoSavedSettings |
-		ImGuiWindowFlags_NoCollapse |
-		ImGuiWindowFlags_NoMove
-	);
+	ImGui::SetNextWindowSize({ width, height });
+	static int flags = (ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
+	ImGui::Begin("Counter-Strike: Global Offensive", &isRunning, flags);
+	ImGui::Text("Path"); ImGui::SameLine();
+	ImGui::SetNextItemWidth(width - 48);
+	ImGui::InputText("##path", cfg->path, sizeof(cfg->path));
 
-	ImGui::PushItemWidth(96);
-	ImGui::BeginChild("Display", { 128.f, 256.f });
-	ImGui::Combo("Display Mode", &cfg->general.display.displayMode, "Windowed\0FullScreen\0Fullscreen Windowed\0");
+	ImGui::Separator();
+
+	ImGui::Columns(2, nullptr, false);
+	ImGui::PushItemWidth(48);
+	ImGui::Text("Display");
+	ImGui::BeginChild("Display", { 176.f, 80.f }, true, ImGuiWindowFlags_NoScrollbar);
+	ImGui::Text("Width"); ImGui::SameLine(spacing - 6);
+	ImGui::InputInt("##width", &cfg->res.width, 0, 0);
+	ImGui::Text("Height"); ImGui::SameLine(spacing - 6);
+	ImGui::InputInt("##height", &cfg->res.height, 0, 0);
+	ImGui::Text("Mode"); ImGui::SameLine(spacing - 6);
+	ImGui::SetNextItemWidth(96);
+	ImGui::Combo("##display", &cfg->res.displayMode, "Windowed\0Fullscreen\0Windowed Fullscreen");
 	ImGui::EndChild();
-	ImGui::PopItemWidth();
 
+	ImGui::Text("Threads"); ImGui::SameLine(spacing);
+	ImGui::InputInt("##threads", &cfg->threads, 0, 0);
+	cfg->threads = std::clamp(cfg->threads, 0, processorCount);
+
+	ImGui::Text("Tickrate"); ImGui::SameLine(spacing);
+	ImGui::InputInt("##tickrate", &cfg->tickrate, 0, 0);
+		
+	ImGui::Text("Refresh"); ImGui::SameLine(spacing);
+	ImGui::InputInt("##refresh", &cfg->refresh, 0, 0);
+	ImGui::NextColumn();
+	ImGui::Checkbox("Insecure", &cfg->insecure);
+	ImGui::Checkbox("Log Console", &cfg->logConsole);
+	ImGui::Checkbox("High Priority", &cfg->highPriority);
+	ImGui::Checkbox("Show Console on Startup", &cfg->consoleOnStartup);
+	ImGui::Checkbox("Limit Vector Shaders", &cfg->limitVSConst);
+	ImGui::Checkbox("Force NoVSync", &cfg->forceNoVSync);
+	ImGui::Checkbox("Emulate GL", &cfg->emulateGL);
+	ImGui::Checkbox("Disable DX9Ex", &cfg->disableDX9Ex);
+	ImGui::Checkbox("OFF Soft Particles on Default", &cfg->softParticlesDefaultOFF);
+	ImGui::Checkbox("Default Config on Startup", &cfg->defaultCfg);
+	ImGui::Checkbox("No HLTV", &cfg->noHLTV);
+	ImGui::Checkbox("No Preload", &cfg->noPreload);
+	ImGui::Checkbox("No Browser", &cfg->noBrowser);
+	ImGui::Checkbox("No Intro", &cfg->noVideo);
+	ImGui::Checkbox("No Joystick Support", &cfg->noJoystick);
+	ImGui::Columns(0);
+
+	ImGui::PopItemWidth();
 	ImGui::End();
 }

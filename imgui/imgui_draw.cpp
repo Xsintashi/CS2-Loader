@@ -191,6 +191,11 @@ void ImGui::StyleColorsVGUI(ImGuiStyle* dst) {
     ImGuiStyle* style = dst ? dst : &ImGui::GetStyle();
     ImVec4* colors = style->Colors;
 
+    style->WindowBorderSize = 0.f;
+    style->PopupBorderSize = 0.f;
+    style->FrameBorderSize = 0.f;
+    style->WindowRounding = 8.f;
+
     colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
     colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
     colors[ImGuiCol_WindowBg] = ImVec4(0.29f, 0.34f, 0.26f, 1.00f);

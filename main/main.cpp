@@ -1,6 +1,7 @@
 #include "gui.h"
 
 #include <thread>
+#include "Settings.h"
 
 int __stdcall wWinMain(
 	HINSTANCE instance,
@@ -8,24 +9,27 @@ int __stdcall wWinMain(
 	PWSTR arguments,
 	int commandShow)
 {
-	// create gui
-	gui::CreateHWindow("Counter-Strike: Global Offensive");
-	gui::CreateDevice();
-	gui::CreateImGui();
 
-	while (gui::isRunning)
+	cfg.emplace(Settings{});
+
+	// create gui
+	GUI::CreateHWindow("Counter-Strike: Global Offensive Loader");
+	GUI::CreateDevice();
+	GUI::CreateImGui();
+
+	while (GUI::isRunning)
 	{
-		gui::BeginRender();
-		gui::Render();
-		gui::EndRender();
+		GUI::BeginRender();
+		GUI::Render();
+		GUI::EndRender();
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
 
 	// destroy gui
-	gui::DestroyImGui();
-	gui::DestroyDevice();
-	gui::DestroyHWindow();
+	GUI::DestroyImGui();
+	GUI::DestroyDevice();
+	GUI::DestroyHWindow();
 
 	return EXIT_SUCCESS;
 }
