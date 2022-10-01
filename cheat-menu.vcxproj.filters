@@ -42,6 +42,9 @@
     <ClInclude Include="main\gui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="main\Settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -69,6 +72,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main\gui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main\Settings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

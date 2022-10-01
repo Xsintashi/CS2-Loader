@@ -1,4 +1,5 @@
 #include "gui.h"
+#include "Settings.h"
 
 #include "../imgui/imgui.h"
 #include "../imgui/imgui_impl_dx9.h"
@@ -10,10 +11,6 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
 	WPARAM wideParameter,
 	LPARAM longParameter
 );
-
-struct Settings {
-
-}s;
 
 long __stdcall WindowProcess(
 	HWND window,
@@ -244,6 +241,8 @@ void gui::EndRender() noexcept
 
 void gui::Render() noexcept
 {
+	cfg.emplace(Settings{});
+	
 	ImGui::SetNextWindowPos({ 0, 0 });
 	ImGui::SetNextWindowSize({ WIDTH, HEIGHT });
 	ImGui::Begin(
@@ -254,15 +253,11 @@ void gui::Render() noexcept
 		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_NoMove
 	);
-	static bool bTest = false;
-	static int iTest = 0;
-	static int iTest2 = 0;
 
 	ImGui::PushItemWidth(96);
-	ImGui::Button("Button");
-	ImGui::Checkbox("CheckBox", &bTest);
-	ImGui::SliderInt("Slider Int", &iTest, 0, 31);
-	ImGui::Combo("Combo", &iTest2, "jeden\0dwa\0trzy\0cztery\0piec\0");
+	ImGui::BeginChild("Display", { 128.f, 256.f });
+	ImGui::Combo("Display Mode", &cfg->general.display.displayMode, "Windowed\0FullScreen\0Fullscreen Windowed\0");
+	ImGui::EndChild();
 	ImGui::PopItemWidth();
 
 	ImGui::End();
