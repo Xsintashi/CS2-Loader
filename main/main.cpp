@@ -2,6 +2,7 @@
 
 #include <thread>
 #include "Settings.h"
+#include "Utils.h"
 
 int __stdcall wWinMain(
 	HINSTANCE instance,
@@ -11,6 +12,8 @@ int __stdcall wWinMain(
 {
 
 	cfg.emplace(Settings{});
+
+	strcpy(cfg->path, getSteamPath());
 
 	// create gui
 	GUI::CreateHWindow("Counter-Strike: Global Offensive Loader");

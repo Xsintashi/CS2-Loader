@@ -246,9 +246,9 @@ void GUI::EndRender() noexcept
 
 void GUI::Render() noexcept
 {
-	constexpr int spacing = 80;
+	constexpr int spacing = 112;
 	int processorCount = std::thread::hardware_concurrency();
-
+	
 	ImGui::SetNextWindowPos({ 0, 0 });
 	ImGui::SetNextWindowSize({ width, height });
 	static int flags = (ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
@@ -262,7 +262,7 @@ void GUI::Render() noexcept
 	ImGui::Columns(2, nullptr, false);
 	ImGui::PushItemWidth(48);
 	ImGui::Text("Display");
-	ImGui::BeginChild("Display", { 176.f, 80.f }, true, ImGuiWindowFlags_NoScrollbar);
+	ImGui::BeginChild("Display", { 208.f, 80.f }, true, ImGuiWindowFlags_NoScrollbar);
 	ImGui::Text("Width"); ImGui::SameLine(spacing - 6);
 	ImGui::InputInt("##width", &cfg->res.width, 0, 0);
 	ImGui::Text("Height"); ImGui::SameLine(spacing - 6);
@@ -272,20 +272,93 @@ void GUI::Render() noexcept
 	ImGui::Combo("##display", &cfg->res.displayMode, "Windowed\0Fullscreen\0Windowed Fullscreen");
 	ImGui::EndChild();
 
+	ImGui::Text("Debug");
+	ImGui::BeginChild("Debug", { 208.f, 80.f }, true, ImGuiWindowFlags_NoScrollbar);
+
+	ImGui::PushID("Insecure");
+	ImGui::Checkbox("Insecure", &cfg->insecure);
+	ImGui::SameLine();
+	ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Your game files signatures will not be validated\nand you will be not allowed to join this VAC secure server.");
+	ImGui::PopID();
+
+	ImGui::PushID("Allow Debuging");
+	ImGui::Checkbox("Allow Debuging", &cfg->allowDebug);
+	ImGui::SameLine();
+	ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("who tf knows");
+	ImGui::PopID();
+
+	ImGui::PushID("Log Console");
+	ImGui::Checkbox("Log Console", &cfg->logConsole);
+	ImGui::SameLine();
+	ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Game will log console in ../csgo/console.log.");
+	ImGui::PopID();
+
+	ImGui::PushID("Show Console");
+	ImGui::Checkbox("Show Console on Startup", &cfg->consoleOnStartup);
+	ImGui::SameLine();
+	ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Makes the game start with the console opened.");
+	ImGui::PopID();
+
+	ImGui::PushID("Game");
+	ImGui::InputText("##game", cfg->game, sizeof(cfg->game));
+	ImGui::SameLine();
+	ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Uses this folder of the game.");
+	ImGui::PopID();
+
+	ImGui::EndChild();
+
+	ImGui::PushID("Threads");
 	ImGui::Text("Threads"); ImGui::SameLine(spacing);
 	ImGui::InputInt("##threads", &cfg->threads, 0, 0);
+	ImGui::SameLine();
+	ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Sets the amount of processor threads that CS:GO will use.");
 	cfg->threads = std::clamp(cfg->threads, 0, processorCount);
+	ImGui::PopID();
 
+	ImGui::PushID("Tickrate");
 	ImGui::Text("Tickrate"); ImGui::SameLine(spacing);
 	ImGui::InputInt("##tickrate", &cfg->tickrate, 0, 0);
-		
+	ImGui::SameLine();
+	ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Sets the tick rate of any \"Offline With Bots\" games, or any servers that you host via your client.");
+	ImGui::PopID();
+
+	ImGui::PushID("Refresh");
 	ImGui::Text("Refresh"); ImGui::SameLine(spacing);
 	ImGui::InputInt("##refresh", &cfg->refresh, 0, 0);
+	ImGui::SameLine();
+	ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Sets the refresh rate of your client. The refresh rate (in hz) is\nhow many times per second your monitor will update - at 60hz,\nyour monitor is effectively showing 60 frames per second. For 144hz monitors, set this to 144 so that your game refreshes 144 times a second.");
+	ImGui::PopID();
+
+	ImGui::PushID("Config");
+	ImGui::Text("Execute Config"); ImGui::SameLine(spacing);
+	ImGui::InputText("##exec", cfg->execConfig, sizeof(cfg->execConfig));
+	ImGui::PopID();
+
+	ImGui::PushID("Language");
+	ImGui::Text("Language"); ImGui::SameLine(spacing);
+	ImGui::InputText("##lang", cfg->language, sizeof(cfg->language));
+	ImGui::PopID();
+
 	ImGui::NextColumn();
-	ImGui::Checkbox("Insecure", &cfg->insecure);
-	ImGui::Checkbox("Log Console", &cfg->logConsole);
+
+
 	ImGui::Checkbox("High Priority", &cfg->highPriority);
-	ImGui::Checkbox("Show Console on Startup", &cfg->consoleOnStartup);
 	ImGui::Checkbox("Limit Vector Shaders", &cfg->limitVSConst);
 	ImGui::Checkbox("Force NoVSync", &cfg->forceNoVSync);
 	ImGui::Checkbox("Emulate GL", &cfg->emulateGL);
@@ -297,7 +370,6 @@ void GUI::Render() noexcept
 	ImGui::Checkbox("No Browser", &cfg->noBrowser);
 	ImGui::Checkbox("No Intro", &cfg->noVideo);
 	ImGui::Checkbox("No Joystick Support", &cfg->noJoystick);
-	ImGui::Columns(0);
 
 	ImGui::PopItemWidth();
 	ImGui::End();

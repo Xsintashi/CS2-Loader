@@ -7,8 +7,9 @@
 class Settings {
 public:
 	char
-		path[256] = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Counter-Strike Global Offensive\\csgo.exe",
-		language[256] = "",
+		path[256] = "",
+		language[256] = "english",
+		game[256] = "csgo",
 		execConfig[256] = "";
 
 	int
@@ -25,6 +26,7 @@ public:
 
 	bool
 		insecure = false,
+		allowDebug = false,
 		logConsole = false,
 		highPriority = false,
 		noVideo = false,
@@ -39,7 +41,7 @@ public:
 		noHLTV = false,
 		noPreload = false,
 		noBrowser = false;
-	;
+
 };
 
 inline std::optional<Settings> cfg;
