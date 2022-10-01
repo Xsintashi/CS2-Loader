@@ -8,9 +8,9 @@ class Settings {
 public:
 	char
 		path[256] = "",
-		language[256] = "english",
-		game[256] = "csgo",
-		execConfig[256] = "";
+		language[32] = "english",
+		game[32] = "csgo",
+		execConfig[32] = "";
 
 	int
 		tickrate = 64,
@@ -27,6 +27,8 @@ public:
 	bool
 		insecure = false,
 		allowDebug = false,
+		hijack = false,
+		dev = false,
 		logConsole = false,
 		highPriority = false,
 		noVideo = false,
@@ -40,6 +42,7 @@ public:
 		defaultCfg = false,
 		noHLTV = false,
 		noPreload = false,
+		noAAFonts = false,
 		noBrowser = false;
 
 };

@@ -10,7 +10,7 @@ const char* getSteamPath() {
 	RegOpenKey(HKEY_CURRENT_USER, subkey, &hKey);
 	RegQueryValueEx(hKey, "SteamPath", NULL, &dwType, (LPBYTE)&value, &value_length);
 
-	sprintf(value, std::string(value).append("/steamapps/common/Counter - Strike Global Offensive/csgo.exe").c_str());
+	sprintf(value, std::string(value).append("/steamapps/common/Counter-Strike Global Offensive/csgo.exe").c_str());
 
 	return value;
 }
