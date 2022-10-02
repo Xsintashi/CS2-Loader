@@ -159,6 +159,7 @@
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="main\Settings.h" />
     <ClInclude Include="nlohmann\json.hpp" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main\gui.cpp" />
@@ -175,7 +176,15 @@
     <ClCompile Include="main\Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="CSGO Loader.aps" />
+    <None Include="LICENSE" />
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CSGO Loader.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
