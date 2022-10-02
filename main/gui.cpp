@@ -5,6 +5,7 @@
 #include <WinUser.h>
 
 #include "Utils.h"
+#include "Global.h"
 
 #include <thread> // for cpu threads counter
 
@@ -506,19 +507,14 @@ void GUI::Render() noexcept
 			break;
 		}
 	} //Only to collapse
-	char* output = &options[0];
-	strcpy(output, options.c_str());
+	global->output = &options[0];
+	strcpy(global->output, options.c_str());
 
 	ImGui::SetNextItemWidth(width - static_cast<int>(ImGui::CalcTextSize("Start").x) - 32);
-	ImGui::InputText("##output", output, ImGuiInputTextFlags_ReadOnly );
+	ImGui::InputText("##output", global->output, ImGuiInputTextFlags_ReadOnly );
 	sameLine
 	if (ImGui::Button("Start")) {
-		std::string run = std::string("\"").append(getSteamPath()).append("\" ").append(output);
-
-		while (run.find("/") != std::string::npos) // replace #p with name of killed player
-			run.replace(run.find("/"), 1, "\\");
-
-		WinExec(run.c_str(), SW_NORMAL);
+		startTheGame();
 	}
 	ImGui::End();
 }
