@@ -7,7 +7,8 @@ class GlobalVars{
 public:
 	int numberArguments;
 	std::vector<std::string> arguments;
-	char* output;
+	std::string steamPath;
+	std::string gameArgs;
 };
 
 inline std::optional<GlobalVars> global;

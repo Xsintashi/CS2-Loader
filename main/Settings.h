@@ -10,6 +10,7 @@ public:
 	char
 		language[32] = "", //e.g english
 		game[32] = "", //csgo
+		serverConnect[32] = "", //connect 127.0.0.1
 		execConfig[32] = "";
 
 	int

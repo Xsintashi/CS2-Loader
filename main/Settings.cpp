@@ -19,13 +19,14 @@ void Set::Load(std::string load) noexcept {
 	l("Refresh", cfg->refresh)
 	l("Threads", cfg->threads)
 
-	ll("Display", "Width" , cfg->res.width)
-	ll("Display", "Height" , cfg->res.height)
-	ll("Display", "Mode" , cfg->res.displayMode)
+	ll("Display", "Width", cfg->res.width)
+	ll("Display", "Height", cfg->res.height)
+	ll("Display", "Mode", cfg->res.displayMode)
 
-	//r(js, "Language", cfg->language, sizeof(cfg->language));
-	//r(js, "Game", cfg->game, sizeof(cfg->game));
-	//r(js, "Exec Config", cfg->execConfig, sizeof(cfg->execConfig));
+	sprintf(cfg->language, std::string(js["Language"]).c_str());
+	sprintf(cfg->game, std::string(js["Game"]).c_str());
+	sprintf(cfg->execConfig, std::string(js["Exec Config"]).c_str());
+	sprintf(cfg->serverConnect, std::string(js["Server"]).c_str());
 
 	l("Third Party Software", cfg->thirdParty)
 	l("Insecure", cfg->insecure)
@@ -64,6 +65,7 @@ void Set::Save(std::string save) noexcept {
 	w("Language",  cfg->language)
 	w("Game",  cfg->game)
 	w("Exec Config",  cfg->execConfig)
+	w("Server",  cfg->serverConnect)
 
 	w("Third Party Software",  cfg->thirdParty)
 	w("Insecure",  cfg->insecure)
@@ -87,6 +89,6 @@ void Set::Save(std::string save) noexcept {
 	w("NO Browser",  cfg->noBrowser)
 
 	// write prettified JSON to another file
-	std::ofstream out("test.cfg");
+	std::ofstream out(save);
 	out << std::setw(4) << js << std::endl;
 }

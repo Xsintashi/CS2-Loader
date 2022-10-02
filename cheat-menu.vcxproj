@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="imgui\imgui_stdlib.h" />
     <ClInclude Include="main\Global.h" />
     <ClInclude Include="main\gui.h" />
     <ClInclude Include="imgui\imconfig.h" />
@@ -167,6 +168,7 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="imgui\imgui_stdlib.cpp" />
     <ClCompile Include="main\gui.cpp" />
     <ClCompile Include="main\main.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />

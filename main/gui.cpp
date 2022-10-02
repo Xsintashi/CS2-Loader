@@ -10,6 +10,7 @@
 #include <thread> // for cpu threads counter
 
 #include "../imgui/imgui.h"
+#include "../imgui/imgui_stdlib.h"
 #include "../imgui/imgui_impl_dx9.h"
 #include "../imgui/imgui_impl_win32.h"
 
@@ -258,8 +259,6 @@ void GUI::EndRender() noexcept
 
 void GUI::Render() noexcept
 {
-
-	std::string options = "-applaunch 730 ";
 	constexpr int spacing = 112;
 	int processorCount = std::thread::hardware_concurrency();
 	
@@ -289,8 +288,7 @@ void GUI::Render() noexcept
 	ImGui::BeginChild("Debug", { 208.f, 176.f }, true, ImGuiWindowFlags_NoScrollbar);
 
 	push("Insecure");
-	if(ImGui::Checkbox("Insecure", &cfg->insecure))
-		options += "-insecure ";
+	ImGui::Checkbox("Insecure", &cfg->insecure);
 
 	sameLine
 	ImGui::TextDisabled("?");
@@ -299,8 +297,7 @@ void GUI::Render() noexcept
 	pop()
 
 	push("Allow Debuging");
-	if(ImGui::Checkbox("Allow Debuging", &cfg->allowDebug))
-		options += "-allowdebuging ";
+	ImGui::Checkbox("Allow Debuging", &cfg->allowDebug);
 	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
@@ -308,9 +305,7 @@ void GUI::Render() noexcept
 	pop()
 
 	push("Log Console");
-	if (ImGui::Checkbox("Log Console", &cfg->logConsole))
-		options += "-condebug ";
-
+	ImGui::Checkbox("Log Console", &cfg->logConsole);
 	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
@@ -318,8 +313,7 @@ void GUI::Render() noexcept
 	pop()
 
 	push("Show Console");
-	if (ImGui::Checkbox("Console on Startup", &cfg->consoleOnStartup))
-		options += "-console ";
+	ImGui::Checkbox("Console on Startup", &cfg->consoleOnStartup);
 
 	sameLine
 	ImGui::TextDisabled("?");
@@ -328,9 +322,7 @@ void GUI::Render() noexcept
 	pop()
 
 	push("Hijack");
-	if (ImGui::Checkbox("Hijack", &cfg->hijack))
-		options += "-hijack ";
-
+	ImGui::Checkbox("Hijack", &cfg->hijack);
 	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
@@ -338,8 +330,7 @@ void GUI::Render() noexcept
 	pop()
 
 	push("Dev");
-	if (ImGui::Checkbox("Dev", &cfg->dev))
-		options += "-dev ";
+	ImGui::Checkbox("Dev", &cfg->dev);
 
 	sameLine
 	ImGui::TextDisabled("?");
@@ -387,6 +378,14 @@ void GUI::Render() noexcept
 		ImGui::SetTooltip("Sets the refresh rate of your client. The refresh rate (in hz) is\nhow many times per second your monitor will update - at 60hz,\nyour monitor is effectively showing 60 frames per second. For 144hz monitors,\nset this to 144 so that your game refreshes 144 times a second.");
 	pop()
 
+	if (ImGui::Button("Save")) {
+		Set::Save("test.cfg");
+	}
+	sameLine
+	if (ImGui::Button("Load")) {
+		Set::Load("test.cfg");
+	}
+
 	ImGui::NextColumn();				/*					NEXT COLUMN					*/
 
 	ImGui::Dummy({ 0.f, 16.f });
@@ -410,108 +409,40 @@ void GUI::Render() noexcept
 		ImGui::SetTooltip("Makes CS:GO start in the language that you specified.");
 	pop()
 
-	if (ImGui::Checkbox("Allow Third Party Software", &cfg->thirdParty))
-		options += "-allow_third_party_software ";
+	push("Server");
+	ImGui::Text("Server"); ImGui::SameLine(spacing);
+	ImGui::SetNextItemWidth(120);
+	ImGui::InputText("##server", cfg->serverConnect, sizeof(cfg->serverConnect));
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Connects with the server automatically.");
+	pop()
 
-	if (ImGui::Checkbox("High Priority", &cfg->highPriority))
-		options += "-high ";
-
-	if (ImGui::Checkbox("Limit Vertex Shaders", &cfg->limitVSConst))
-		options += "-limitvsconst ";
-
-	if (ImGui::Checkbox("Force NoVSync", &cfg->forceNoVSync))
-		options += "-forcenovsync ";
-
-	if (ImGui::Checkbox("Emulate GL", &cfg->emulateGL))
-		options += "-r_emulate_g ";
-
-	if (ImGui::Checkbox("Disable DX9Ex", &cfg->disableDX9Ex))
-		options += "-disable_d3d9ex ";
-
-	if (ImGui::Checkbox("Disable Soft Particles on Default", &cfg->softParticlesDefaultOFF))
-		options += "-softparticlesdefaultoff ";
-
-	if (ImGui::Checkbox("Default Config on Startup", &cfg->defaultCfg))
-		options += "-autoconfig ";
-
-	if (ImGui::Checkbox("Disable Anti-Aliasing Fonts", &cfg->noAAFonts))
-		options += "-noaafonts ";
-
-	if (ImGui::Checkbox("Disable HLTV", &cfg->noHLTV))
-		options += "-nohltv ";
-
-	if (ImGui::Checkbox("Disable Preload", &cfg->noPreload))
-		options += "nopreload ";
-
-	if (ImGui::Checkbox("Disable Browser", &cfg->noBrowser))
-		options += "-no-browser ";
-
-	if (ImGui::Checkbox("Disable Intro", &cfg->noVideo))
-		options += "-novid ";
-
-	if (ImGui::Checkbox("Disable Joystick Support", &cfg->noJoystick))
-		options += "-nojoy ";
+	ImGui::Checkbox("Allow Third Party Software", &cfg->thirdParty);
+	ImGui::Checkbox("High Priority", &cfg->highPriority);
+	ImGui::Checkbox("Limit Vertex Shaders", &cfg->limitVSConst);
+	ImGui::Checkbox("Force NoVSync", &cfg->forceNoVSync);
+	ImGui::Checkbox("Emulate GL", &cfg->emulateGL);
+	ImGui::Checkbox("Disable DX9Ex", &cfg->disableDX9Ex);
+	ImGui::Checkbox("Disable Soft Particles on Default", &cfg->softParticlesDefaultOFF);
+	ImGui::Checkbox("Default Config on Startup", &cfg->defaultCfg);
+	ImGui::Checkbox("Disable Anti-Aliasing Fonts", &cfg->noAAFonts);
+	ImGui::Checkbox("Disable HLTV", &cfg->noHLTV);
+	ImGui::Checkbox("Disable Preload", &cfg->noPreload);
+	ImGui::Checkbox("Disable Browser", &cfg->noBrowser);
+	ImGui::Checkbox("Disable Intro", &cfg->noVideo);
+	ImGui::Checkbox("Disable Joystick Support", &cfg->noJoystick);
 
 	ImGui::PopItemWidth();
 
 	ImGui::Columns(1);
 
-	if (ImGui::Button("Save")) {
-		Set::Save("test.cfg");
-	}
-	sameLine
-	if (ImGui::Button("Load")) {
-		Set::Load("test.cfg");
-	}
-
 	//ImGui::Dummy({ 0.f, 16.f });
 	ImGui::Separator();
-
-	{
-		if (cfg->res.width)
-			options += std::string("-w ").append(std::to_string(cfg->res.width)).append(" ");
-
-		if (cfg->res.height)
-			options += std::string("-h ").append(std::to_string(cfg->res.height)).append(" ");
-
-		if (cfg->threads)
-			options += std::string("-threads ").append(std::to_string(cfg->threads)).append(" ");
-
-		if (cfg->tickrate)
-			options += std::string("-tickrate ").append(std::to_string(cfg->tickrate)).append(" ");
-
-		if (cfg->refresh)
-			options += std::string("-refresh ").append(std::to_string(cfg->refresh)).append(" ");
-
-		if (strlen(cfg->language))
-			options += std::string("-language ").append(cfg->language).append(" ");
-
-		if (strlen(cfg->execConfig))
-			options += std::string("+exec ").append(cfg->execConfig).append(" ");
-
-		if (strlen(cfg->game))
-			options += std::string("-game ").append(cfg->game).append(" ");
-
-		switch (cfg->res.displayMode) {
-		default:
-			options += std::string("");
-			break;
-		case 1:
-			options += std::string("-windowed ");
-			break;
-		case 2:
-			options += std::string("-fullscreen ");
-			break;
-		case 3:
-			options += std::string("-windowed -noborder ");
-			break;
-		}
-	} //Only to collapse
-	global->output = &options[0];
-	strcpy(global->output, options.c_str());
-
+	prepareConfig();
 	ImGui::SetNextItemWidth(width - static_cast<int>(ImGui::CalcTextSize("Start").x) - 32);
-	ImGui::InputText("##output", global->output, ImGuiInputTextFlags_ReadOnly );
+	ImGui::InputText("##output", &global->gameArgs, ImGuiInputTextFlags_ReadOnly);
 	sameLine
 	if (ImGui::Button("Start")) {
 		startTheGame();

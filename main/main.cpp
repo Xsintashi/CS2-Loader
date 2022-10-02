@@ -21,6 +21,8 @@ int WINAPI wWinMain(
 	cfg.emplace(Settings{});
 	global.emplace(GlobalVars{});
 	
+	global->steamPath = getSteamPath();
+
 	std::stringstream args(wcharToChar(arguments));
 	std::string argsTemp;
 
@@ -29,12 +31,13 @@ int WINAPI wWinMain(
 		global->arguments.push_back(argsTemp);
 	}
 
-	for (int i = 0; i < global->arguments.size(); ++i) {
+	for (unsigned int i = 0; i < global->arguments.size(); ++i) {
 		if (std::string(global->arguments[i]) == "-load") {
 			Set::Load(global->arguments[i + 1]);
 			i++;
 		}
 		if (std::string(global->arguments[i]) == "-silent") {
+			prepareConfig();
 			startTheGame();
 			GUI::isRunning = false;
 		}
