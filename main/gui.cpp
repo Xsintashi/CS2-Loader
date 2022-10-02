@@ -15,7 +15,7 @@
 #define sameLine ImGui::SameLine();
 #define push(val) ImGui::PushID(val);
 #define pop() ImGui::PopID();
-
+#define title "Counter-Strike: Global Offensive Loader"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
 	HWND window,
@@ -86,6 +86,10 @@ long __stdcall WindowProcess(
 	}
 
 	return DefWindowProc(window, message, wideParameter, longParameter);
+}
+
+void GUI::Minimalize() noexcept {
+	ShowWindow(window, SW_MINIMIZE);
 }
 
 void GUI::CreateHWindow(const char* windowName) noexcept
@@ -260,8 +264,11 @@ void GUI::Render() noexcept
 	
 	ImGui::SetNextWindowPos({ 0, 0 });
 	ImGui::SetNextWindowSize({ width, height });
-	static int flags = (ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
-	ImGui::Begin("Counter-Strike: Global Offensive Loader", &isRunning, flags);
+	static int flags = (ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
+	ImGui::Begin(title, nullptr, flags);
+	ImGui::Text(title); sameLine ImGui::SetCursorPosX(width  - 48);
+		if (ImGui::Button("_", { 16.f, 16.f })) Minimalize();  sameLine
+		if (ImGui::Button("X", { 16.f, 16.f })) isRunning = false;
 	ImGui::Columns(2, nullptr, false);
 	ImGui::PushItemWidth(48);
 	ImGui::Text("Display");
@@ -346,7 +353,7 @@ void GUI::Render() noexcept
 	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
-		ImGui::SetTooltip("Uses this folder of the game.");
+		ImGui::SetTooltip("Folder of the game.");
 	pop()
 
 	ImGui::EndChild();

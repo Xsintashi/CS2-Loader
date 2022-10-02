@@ -23,6 +23,8 @@ namespace GUI
 	inline LPDIRECT3DDEVICE9 device = nullptr;
 	inline D3DPRESENT_PARAMETERS presentParameters = { };
 
+	void Minimalize() noexcept;
+
 	// handle window creation & destruction
 	void CreateHWindow(const char* windowName) noexcept;
 	void DestroyHWindow() noexcept;
