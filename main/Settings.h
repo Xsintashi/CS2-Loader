@@ -3,11 +3,11 @@
 #include <string>
 #include <optional>
 #include <vector>
+#include "../nlohmann/json.hpp"
 
 class Settings {
 public:
 	char
-		path[256] = "",
 		language[32] = "", //e.g english
 		game[32] = "", //csgo
 		execConfig[32] = "";
@@ -45,7 +45,11 @@ public:
 		noPreload = false,
 		noAAFonts = false,
 		noBrowser = false;
-
 };
+
+namespace Set {
+	void Save(std::string save = "empty") noexcept;
+	void Load(std::string load = "empty") noexcept;
+}
 
 inline std::optional<Settings> cfg;

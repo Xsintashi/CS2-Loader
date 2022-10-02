@@ -12,6 +12,11 @@
 #include "../imgui/imgui_impl_dx9.h"
 #include "../imgui/imgui_impl_win32.h"
 
+#define sameLine ImGui::SameLine();
+#define push(val) ImGui::PushID(val);
+#define pop() ImGui::PopID();
+
+
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
 	HWND window,
 	UINT message,
@@ -257,13 +262,6 @@ void GUI::Render() noexcept
 	ImGui::SetNextWindowSize({ width, height });
 	static int flags = (ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
 	ImGui::Begin("Counter-Strike: Global Offensive Loader", &isRunning, flags);
-	ImGui::Text("Path"); ImGui::SameLine();
-	ImGui::SetNextItemWidth(width - static_cast<int>(ImGui::CalcTextSize("Path").x) - 48);
-	ImGui::InputText("##path", cfg->path, sizeof(cfg->path));
-	ImGui::SameLine(); ImGui::Button("...",{16.f, 16.f});
-
-	ImGui::Separator();
-
 	ImGui::Columns(2, nullptr, false);
 	ImGui::PushItemWidth(48);
 	ImGui::Text("Display");
@@ -282,126 +280,127 @@ void GUI::Render() noexcept
 	ImGui::Text("Debug");
 	ImGui::BeginChild("Debug", { 208.f, 176.f }, true, ImGuiWindowFlags_NoScrollbar);
 
-	ImGui::PushID("Insecure");
+	push("Insecure");
 	if(ImGui::Checkbox("Insecure", &cfg->insecure))
 		options += "-insecure ";
 
-	ImGui::SameLine();
+	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("Your game files signatures will not be validated\nand you will be not allowed to join this VAC secure server.");
-	ImGui::PopID();
+	pop()
 
-	ImGui::PushID("Allow Debuging");
+	push("Allow Debuging");
 	if(ImGui::Checkbox("Allow Debuging", &cfg->allowDebug))
 		options += "-allowdebuging ";
-	ImGui::SameLine();
+	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("Allows to debug the game.");
-	ImGui::PopID();
+	pop()
 
-	ImGui::PushID("Log Console");
+	push("Log Console");
 	if (ImGui::Checkbox("Log Console", &cfg->logConsole))
 		options += "-condebug ";
 
-	ImGui::SameLine();
+	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("Game will log console in ../csgo/console.log.");
-	ImGui::PopID();
+	pop()
 
-	ImGui::PushID("Show Console");
+	push("Show Console");
 	if (ImGui::Checkbox("Console on Startup", &cfg->consoleOnStartup))
 		options += "-console ";
 
-	ImGui::SameLine();
+	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("Makes the game start with the console opened.");
-	ImGui::PopID();
+	pop()
 
-	ImGui::PushID("Hijack");
+	push("Hijack");
 	if (ImGui::Checkbox("Hijack", &cfg->hijack))
 		options += "-hijack ";
 
-	ImGui::SameLine();
+	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("Hijacks the game.");
-	ImGui::PopID();
+	pop()
 
-	ImGui::PushID("Dev");
+	push("Dev");
 	if (ImGui::Checkbox("Dev", &cfg->dev))
 		options += "-dev ";
 
-	ImGui::SameLine();
+	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("dev.");
-	ImGui::PopID();
+	pop()
 
-	ImGui::PushID("Game");
+	push("Game");
 	ImGui::Text("Game"); ImGui::SameLine(spacing - 8);
 	ImGui::SetNextItemWidth(64);
 	ImGui::InputText("##game", cfg->game, sizeof(cfg->game));
-	ImGui::SameLine();
+	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("Uses this folder of the game.");
-	ImGui::PopID();
+	pop()
 
 	ImGui::EndChild();
 
-	ImGui::PushID("Threads");
+	push("Threads");
 	ImGui::Text("Threads"); ImGui::SameLine(spacing);
 	ImGui::InputInt("##threads", &cfg->threads, 0, 0);
-	ImGui::SameLine();
+	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("Sets the amount of processor threads that CS:GO will use.");
 	cfg->threads = std::clamp(cfg->threads, 0, processorCount);
-	ImGui::PopID();
+	pop()
 
-	ImGui::PushID("Tickrate");
+	push("Tickrate");
 	ImGui::Text("Tickrate"); ImGui::SameLine(spacing);
 	ImGui::InputInt("##tickrate", &cfg->tickrate, 0, 0);
-	ImGui::SameLine();
+	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("Sets the tick rate of any \"Offline With Bots\" games,\nor any servers that you host via your client.");
-	ImGui::PopID();
+	pop()
 
-	ImGui::PushID("Refresh");
+	push("Refresh");
 	ImGui::Text("Refresh"); ImGui::SameLine(spacing);
 	ImGui::InputInt("##refresh", &cfg->refresh, 0, 0);
-	ImGui::SameLine();
+	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("Sets the refresh rate of your client. The refresh rate (in hz) is\nhow many times per second your monitor will update - at 60hz,\nyour monitor is effectively showing 60 frames per second. For 144hz monitors,\nset this to 144 so that your game refreshes 144 times a second.");
-	ImGui::PopID();
+	pop()
 
-	ImGui::NextColumn();
+	ImGui::NextColumn();				/*					NEXT COLUMN					*/
 
-	ImGui::PushID("Config");
+	ImGui::Dummy({ 0.f, 16.f });
+	push("Config");
 	ImGui::Text("Execute Config"); ImGui::SameLine(spacing);
 	ImGui::SetNextItemWidth(120);
 	ImGui::InputText("##exec", cfg->execConfig, sizeof(cfg->execConfig));
-	ImGui::SameLine();
+	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("This launch option will execute all commands a specified file.");
-	ImGui::PopID();
+	pop()
 
-	ImGui::PushID("Language");
+	push("Language");
 	ImGui::Text("Language"); ImGui::SameLine(spacing);
 	ImGui::SetNextItemWidth(120);
 	ImGui::InputText("##lang", cfg->language, sizeof(cfg->language));
-	ImGui::SameLine();
+	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("Makes CS:GO start in the language that you specified.");
-	ImGui::PopID();
+	pop()
 
 	if (ImGui::Checkbox("Allow Third Party Software", &cfg->thirdParty))
 		options += "-allow_third_party_software ";
@@ -409,7 +408,7 @@ void GUI::Render() noexcept
 	if (ImGui::Checkbox("High Priority", &cfg->highPriority))
 		options += "-high ";
 
-	if (ImGui::Checkbox("Limit Vector Shaders", &cfg->limitVSConst))
+	if (ImGui::Checkbox("Limit Vertex Shaders", &cfg->limitVSConst))
 		options += "-limitvsconst ";
 
 	if (ImGui::Checkbox("Force NoVSync", &cfg->forceNoVSync))
@@ -445,32 +444,48 @@ void GUI::Render() noexcept
 	if (ImGui::Checkbox("Disable Joystick Support", &cfg->noJoystick))
 		options += "-nojoy ";
 
-	if (cfg->res.width)
-	options += std::string("-w ").append(std::to_string(cfg->res.width )).append(" ");
+	ImGui::PopItemWidth();
 
-	if (cfg->res.height)
-	options += std::string("-h ").append(std::to_string(cfg->res.height)).append(" ");
+	ImGui::Columns(1);
 
-	if (cfg->threads)
-		options += std::string("-threads ").append(std::to_string(cfg->threads)).append(" ");
+	if (ImGui::Button("Save")) {
+		Set::Save("test.cfg");
+	}
+	sameLine
+	if (ImGui::Button("Load")) {
+		Set::Load("test.cfg");
+	}
 
-	if (cfg->tickrate)
-		options += std::string("-tickrate ").append(std::to_string(cfg->tickrate)).append(" ");
+	//ImGui::Dummy({ 0.f, 16.f });
+	ImGui::Separator();
 
-	if (cfg->refresh)
-		options += std::string("-refresh ").append(std::to_string(cfg->refresh)).append(" ");
+	{
+		if (cfg->res.width)
+			options += std::string("-w ").append(std::to_string(cfg->res.width)).append(" ");
 
-	if(strlen(cfg->language))
-		options += std::string("-language ").append(cfg->language).append(" ");
+		if (cfg->res.height)
+			options += std::string("-h ").append(std::to_string(cfg->res.height)).append(" ");
 
-	if (strlen(cfg->execConfig))
-		options += std::string("+exec ").append(cfg->execConfig).append(" ");
+		if (cfg->threads)
+			options += std::string("-threads ").append(std::to_string(cfg->threads)).append(" ");
 
-	if (strlen(cfg->game))
-		options += std::string("-game ").append(cfg->game).append(" ");
+		if (cfg->tickrate)
+			options += std::string("-tickrate ").append(std::to_string(cfg->tickrate)).append(" ");
 
-	switch (cfg->res.displayMode) {
-		default:	
+		if (cfg->refresh)
+			options += std::string("-refresh ").append(std::to_string(cfg->refresh)).append(" ");
+
+		if (strlen(cfg->language))
+			options += std::string("-language ").append(cfg->language).append(" ");
+
+		if (strlen(cfg->execConfig))
+			options += std::string("+exec ").append(cfg->execConfig).append(" ");
+
+		if (strlen(cfg->game))
+			options += std::string("-game ").append(cfg->game).append(" ");
+
+		switch (cfg->res.displayMode) {
+		default:
 			options += std::string("");
 			break;
 		case 1:
@@ -480,24 +495,18 @@ void GUI::Render() noexcept
 			options += std::string("-fullscreen ");
 			break;
 		case 3:
-			options += std::string("-noborder ");
+			options += std::string("-windowed -noborder ");
 			break;
-	}
-
-	ImGui::PopItemWidth();
-
-	ImGui::Columns(1);
-	ImGui::Dummy({ 0.f, 16.f });
-	ImGui::Separator();
-
+		}
+	} //Only to collapse
 	char* output = &options[0];
 	strcpy(output, options.c_str());
 
 	ImGui::SetNextItemWidth(width - static_cast<int>(ImGui::CalcTextSize("Start").x) - 32);
 	ImGui::InputText("##output", output, ImGuiInputTextFlags_ReadOnly );
-	ImGui::SameLine();
+	sameLine
 	if (ImGui::Button("Start")) {
-		std::string run = std::string("\"").append(cfg->path).append("\" ").append(output);
+		std::string run = std::string("\"").append(getSteamPath()).append("\" ").append(output);
 
 		while (run.find("/") != std::string::npos) // replace #p with name of killed player
 			run.replace(run.find("/"), 1, "\\");
