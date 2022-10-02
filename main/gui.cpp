@@ -249,17 +249,18 @@ void GUI::EndRender() noexcept
 void GUI::Render() noexcept
 {
 
-	std::string options = "-steam ";
+	std::string options = "-applaunch 730 ";
 	constexpr int spacing = 112;
 	int processorCount = std::thread::hardware_concurrency();
 	
 	ImGui::SetNextWindowPos({ 0, 0 });
 	ImGui::SetNextWindowSize({ width, height });
-	static int flags = (ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
-	ImGui::Begin("Counter-Strike: Global Offensive", &isRunning, flags);
+	static int flags = (ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
+	ImGui::Begin("Counter-Strike: Global Offensive Loader", &isRunning, flags);
 	ImGui::Text("Path"); ImGui::SameLine();
-	ImGui::SetNextItemWidth(width - static_cast<int>(ImGui::CalcTextSize("Path").x) - 4);
+	ImGui::SetNextItemWidth(width - static_cast<int>(ImGui::CalcTextSize("Path").x) - 48);
 	ImGui::InputText("##path", cfg->path, sizeof(cfg->path));
+	ImGui::SameLine(); ImGui::Button("...",{16.f, 16.f});
 
 	ImGui::Separator();
 
@@ -268,12 +269,14 @@ void GUI::Render() noexcept
 	ImGui::Text("Display");
 	ImGui::BeginChild("Display", { 208.f, 80.f }, true, ImGuiWindowFlags_NoScrollbar);
 	ImGui::Text("Width"); ImGui::SameLine(spacing - 4);
+	ImGui::SetNextItemWidth(48);
 	ImGui::InputInt("##width", &cfg->res.width, 0, 0);
 	ImGui::Text("Height"); ImGui::SameLine(spacing - 4);
+	ImGui::SetNextItemWidth(48);
 	ImGui::InputInt("##height", &cfg->res.height, 0, 0);
 	ImGui::Text("Mode"); ImGui::SameLine(spacing - 4);
 	ImGui::SetNextItemWidth(96);
-	ImGui::Combo("##display", &cfg->res.displayMode, "Windowed\0Fullscreen\0Windowed Fullscreen\0");
+	ImGui::Combo("##display", &cfg->res.displayMode, "Default\0Windowed\0Fullscreen\0Windowed Fullscreen\0");
 	ImGui::EndChild();
 
 	ImGui::Text("Debug");
@@ -339,7 +342,8 @@ void GUI::Render() noexcept
 	ImGui::PopID();
 
 	ImGui::PushID("Game");
-	ImGui::Text("Game"); ImGui::SameLine(spacing - 4);
+	ImGui::Text("Game"); ImGui::SameLine(spacing - 8);
+	ImGui::SetNextItemWidth(64);
 	ImGui::InputText("##game", cfg->game, sizeof(cfg->game));
 	ImGui::SameLine();
 	ImGui::TextDisabled("?");
@@ -398,7 +402,6 @@ void GUI::Render() noexcept
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("Makes CS:GO start in the language that you specified.");
 	ImGui::PopID();
-
 
 	if (ImGui::Checkbox("Allow Third Party Software", &cfg->thirdParty))
 		options += "-allow_third_party_software ";
@@ -468,13 +471,15 @@ void GUI::Render() noexcept
 
 	switch (cfg->res.displayMode) {
 		default:	
-		case 1:
-			options += std::string("-fullscreen ");
+			options += std::string("");
 			break;
-		case 0:
+		case 1:
 			options += std::string("-windowed ");
 			break;
 		case 2:
+			options += std::string("-fullscreen ");
+			break;
+		case 3:
 			options += std::string("-noborder ");
 			break;
 	}
@@ -482,7 +487,7 @@ void GUI::Render() noexcept
 	ImGui::PopItemWidth();
 
 	ImGui::Columns(1);
-
+	ImGui::Dummy({ 0.f, 16.f });
 	ImGui::Separator();
 
 	char* output = &options[0];

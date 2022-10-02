@@ -8,20 +8,20 @@ class Settings {
 public:
 	char
 		path[256] = "",
-		language[32] = "english",
-		game[32] = "csgo",
+		language[32] = "", //e.g english
+		game[32] = "", //csgo
 		execConfig[32] = "";
 
 	int
-		tickrate = 64,
-		refresh = 60,
-		threads = 4;
+		tickrate = 0, //64 || 128
+		refresh = 0, // 60 || 144
+		threads = 0;
 
 	struct Resolution {
 		int
-			width = 1024,
-			height = 768,
-			displayMode = 1;
+			width = 0,
+			height = 0,
+			displayMode = 0;
 	}res;
 
 	bool
