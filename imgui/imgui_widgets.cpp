@@ -147,7 +147,7 @@ static ImVec2           InputTextCalcTextSizeW(const ImWchar* text_begin, const 
 // - BulletTextV()
 //-------------------------------------------------------------------------
 
-const ImU32 colWhite = 0xFFC1C1C1; const ImU32 colBlack = 0xFF4a5742; const ImU32 colWhiteText = 0xFFD9D9D9;
+const ImU32 colWhite = 0xFF87937F; const ImU32 colBlack = 0xFF4B5743; const ImU32 colWhiteText = 0xFF85917D;
 
 void ImGui::TextEx(const char* text, const char* text_end, ImGuiTextFlags flags)
 {

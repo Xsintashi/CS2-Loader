@@ -8,8 +8,6 @@
 #include <iostream>
 #include <sstream>
 
-#pragma
-
 int WINAPI wWinMain(
 	HINSTANCE instance,
 	HINSTANCE previousInstance,
@@ -41,13 +39,18 @@ int WINAPI wWinMain(
 			startTheGame();
 			GUI::isRunning = false;
 		}
+		if (std::string(global->arguments[i]) == "-min") {
+			GUI::windowVisibility(VISIBLITY::MINIMIZE);
+		}
+		if (std::string(global->arguments[i]) == "-hide") {
+			GUI::windowVisibility(VISIBLITY::HIDE);
+		}
 	}
 
 	// create gui
 	GUI::CreateHWindow("Counter-Strike: Global Offensive Loader");
 	GUI::CreateDevice();
 	GUI::CreateImGui();
-
 	while (GUI::isRunning)
 	{
 		GUI::BeginRender();

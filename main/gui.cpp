@@ -6,6 +6,7 @@
 
 #include "Utils.h"
 #include "Global.h"
+#include "../resource.h"
 
 #include <thread> // for cpu threads counter
 
@@ -72,7 +73,7 @@ long __stdcall WindowProcess(
 
 			if (GUI::position.x >= 0 &&
 				GUI::position.x <= GUI::width &&
-				GUI::position.y >= 0 && GUI::position.y <= 19)
+				GUI::position.y >= 0 && GUI::position.y <= 37)
 				SetWindowPos(
 					GUI::window,
 					HWND_TOPMOST,
@@ -90,9 +91,10 @@ long __stdcall WindowProcess(
 	return DefWindowProc(window, message, wideParameter, longParameter);
 }
 
-void GUI::Minimalize() noexcept {
-	ShowWindow(window, SW_MINIMIZE);
+void GUI::windowVisibility(int mode) noexcept {
+	ShowWindow(window, mode);
 }
+
 
 void GUI::CreateHWindow(const char* windowName) noexcept
 {
@@ -266,9 +268,28 @@ void GUI::Render() noexcept
 	ImGui::SetNextWindowSize({ width, height });
 	static int flags = (ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
 	ImGui::Begin(title, nullptr, flags);
-	ImGui::Text(title); sameLine ImGui::SetCursorPosX(width  - 48);
-		if (ImGui::Button("_", { 16.f, 16.f })) Minimalize();  sameLine
-		if (ImGui::Button("X", { 16.f, 16.f })) isRunning = false;
+	ImGui::Text(title); sameLine ImGui::SetCursorPosX(width  - 76);
+	if (ImGui::Button("C", { 16.f, 16.f })) {
+		ImGui::OpenPopup("configWindow");
+	}sameLine
+	if (ImGui::Button("_", { 16.f, 16.f })) windowVisibility(VISIBLITY::MINIMIZE);  sameLine
+	if (ImGui::Button("X", { 16.f, 16.f })) isRunning = false;
+
+	if (ImGui::BeginPopup("configWindow")) {
+		static std::string configID = "";
+		ImGui::InputText("", &configID);
+		if (ImGui::Button("Save")) {
+			Set::Save(configID);
+			ImGui::CloseCurrentPopup();
+		}
+		sameLine
+		if (ImGui::Button("Load")) {
+			Set::Load(configID);
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
+
 	ImGui::Columns(2, nullptr, false);
 	ImGui::PushItemWidth(48);
 	ImGui::Text("Display");
@@ -378,14 +399,6 @@ void GUI::Render() noexcept
 		ImGui::SetTooltip("Sets the refresh rate of your client. The refresh rate (in hz) is\nhow many times per second your monitor will update - at 60hz,\nyour monitor is effectively showing 60 frames per second. For 144hz monitors,\nset this to 144 so that your game refreshes 144 times a second.");
 	pop()
 
-	if (ImGui::Button("Save")) {
-		Set::Save("test.cfg");
-	}
-	sameLine
-	if (ImGui::Button("Load")) {
-		Set::Load("test.cfg");
-	}
-
 	ImGui::NextColumn();				/*					NEXT COLUMN					*/
 
 	ImGui::Dummy({ 0.f, 16.f });
@@ -419,20 +432,104 @@ void GUI::Render() noexcept
 		ImGui::SetTooltip("Connects with the server automatically.");
 	pop()
 
+	push("thirdparty")
 	ImGui::Checkbox("Allow Third Party Software", &cfg->thirdParty);
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Allows some applications interact with CS:GO by injecting directly into the game process. May lower your Trust Factor!");
+	pop()
+	push("high")
 	ImGui::Checkbox("High Priority", &cfg->highPriority);
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("It will make the CS:GO process higher priority, and therefore, your computer will give resources (RAM, CPU, etc)\nto CS:GO instead of any other processes that you are running.");
+	pop()
+	push("vertex")
 	ImGui::Checkbox("Limit Vertex Shaders", &cfg->limitVSConst);
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("It will limit the game's number of vertex shaders to a maximum of 256,\nwhich may offer an FPS boost.");
+	pop()
+	push("vsync")
 	ImGui::Checkbox("Force NoVSync", &cfg->forceNoVSync);
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("It disables VSync which often causes more problems than it solves");
+	pop()
+	push("emulategl")
 	ImGui::Checkbox("Emulate GL", &cfg->emulateGL);
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("It will make CS:GO emulate OpenGL, which can cause an FPS boost for some players.");
+	pop()
+	push("DX9Ex")
 	ImGui::Checkbox("Disable DX9Ex", &cfg->disableDX9Ex);
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("It will disable DirectX 9Ex, but will decrease FPS for most people.");
+	pop()
+	push("softparticles")
 	ImGui::Checkbox("Disable Soft Particles on Default", &cfg->softParticlesDefaultOFF);
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("It will make particles be rendered without feathering (scene depth blending),\nwhich can cause an FPS boost but decrease the graphics quality of your game.");
+	pop()
+	push("defaultcfg")
 	ImGui::Checkbox("Default Config on Startup", &cfg->defaultCfg);
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("This launch option will force your game to start up with\mthe default configuration settings for the game");
+	pop()
+	push("AAFonts")
 	ImGui::Checkbox("Disable Anti-Aliasing Fonts", &cfg->noAAFonts);
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("It disables Anti-Aliasing for Fonts");
+	pop()
+	push("dHLTV")
 	ImGui::Checkbox("Disable HLTV", &cfg->noHLTV);
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("This launch option turns off all Source TV features.");
+	pop()
+	push("dPreload")
 	ImGui::Checkbox("Disable Preload", &cfg->noPreload);
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("This launch option forces models not to be preloaded. Whilst this will have a different\neffect for every computer, chances are, this command will make games/maps load faster,\nbut may cause worse performance during actual gameplay.");
+	pop()
+	push("dBrowser")
 	ImGui::Checkbox("Disable Browser", &cfg->noBrowser);
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("It should disable the in-game browser that shows\nin servers as welcome messages (not the Steam overlay).");
+	pop()
+	push("dIntro")
 	ImGui::Checkbox("Disable Intro", &cfg->noVideo);
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("This launch option makes the game skip the Valve/CS:GO intro video\nwhen you load it up - i.e. you'll go straight to the game.");
+	pop()
+	push("dJoystick")
 	ImGui::Checkbox("Disable Joystick Support", &cfg->noJoystick);
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("	This launch option makes the game drop all joystick support,\nwhich can decrease the amount of RAM it uses.");
+	pop()
 
 	ImGui::PopItemWidth();
 

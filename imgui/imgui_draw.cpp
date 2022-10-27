@@ -191,17 +191,17 @@ void ImGui::StyleColorsVGUI(ImGuiStyle* dst) {
     ImGuiStyle* style = dst ? dst : &ImGui::GetStyle();
     ImVec4* colors = style->Colors;
 
-    style->WindowBorderSize = 0.f;
-    style->PopupBorderSize = 0.f;
-    style->FrameBorderSize = 0.f;
-    style->WindowRounding = 8.f;
+    style->WindowBorderSize = 1.f;
+    style->PopupBorderSize = 1.f;
+    style->FrameBorderSize = .0f;
+    //style->WindowRounding = 8.f;
 
     colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
     colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
     colors[ImGuiCol_WindowBg] = ImVec4(0.29f, 0.34f, 0.26f, 1.00f);
     colors[ImGuiCol_ChildBg] = ImVec4(0.29f, 0.34f, 0.26f, 1.00f);
-    colors[ImGuiCol_PopupBg] = ImVec4(0.24f, 0.27f, 0.20f, 1.00f);
-    colors[ImGuiCol_Border] = ImVec4(0.54f, 0.57f, 0.51f, 0.50f);
+    colors[ImGuiCol_PopupBg] = ImVec4(0.29f, 0.34f, 0.26f, 1.00f);
+    colors[ImGuiCol_Border] = ImVec4(0.13f, 0.17f, 0.11f, 0.50f);
     colors[ImGuiCol_BorderShadow] = ImVec4(0.14f, 0.16f, 0.11f, 0.52f);
     colors[ImGuiCol_FrameBg] = ImVec4(0.24f, 0.27f, 0.20f, 1.00f);
     colors[ImGuiCol_FrameBgHovered] = ImVec4(0.27f, 0.30f, 0.23f, 1.00f);

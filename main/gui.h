@@ -1,6 +1,21 @@
 #pragma once
 #include <d3d9.h>
 
+enum VISIBLITY{
+	HIDE,
+	NORMAL,
+	SHOWMINIMIZED,
+	MAXIMIZE,
+	SHOWNOACTIVATE,
+	SHOW,
+	MINIMIZE,
+	SHOWMINNOACTIVE,
+	SHOWNA,
+	RESTORE,
+	SHOWDEFAULT,
+	MAX
+};
+
 namespace GUI
 {
 	// constant window size
@@ -23,7 +38,8 @@ namespace GUI
 	inline LPDIRECT3DDEVICE9 device = nullptr;
 	inline D3DPRESENT_PARAMETERS presentParameters = { };
 
-	void Minimalize() noexcept;
+	// handle window visibility
+	void windowVisibility(int mode) noexcept;
 
 	// handle window creation & destruction
 	void CreateHWindow(const char* windowName) noexcept;
