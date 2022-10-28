@@ -1,18 +1,20 @@
-#include "Utils.h"
-#include <Windows.h>
-#include <string>
+﻿#include "Utils.h"
 #include "Global.h"
 #include "Settings.h"
+#include <Windows.h>
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <TlHelp32.h>
 
 const char* getSteamPath() {
 	DWORD dwType = REG_SZ;
 	HKEY hKey = 0;
 	char value[64];
-	DWORD value_length = 64;
+	DWORD valueLength = 64;
 	const char* subkey = "SOFTWARE\\Valve\\Steam";
 	RegOpenKey(HKEY_CURRENT_USER, subkey, &hKey);
-	RegQueryValueEx(hKey, "SteamExe", NULL, &dwType, (LPBYTE)&value, &value_length);
+	RegQueryValueEx(hKey, "SteamPath", NULL, &dwType, (LPBYTE)&value, &valueLength);
 
 	sprintf(value, std::string(value).c_str());
 
@@ -20,13 +22,7 @@ const char* getSteamPath() {
 }
 
 void startTheGame() {
-	std::string run = std::string("\"").append(global->steamPath).append("\" ").append(global->gameArgs);
-	printf(global->gameArgs.c_str());
-	printf(std::string("\n\n").append(run).c_str());
-
-
-	while (run.find("/") != std::string::npos)
-		run.replace(run.find("/"), 1, "\\");
+	std::string run = std::string("\"").append(global->steamPath).append("\\steam.exe\" ").append(global->gameArgs);
 
 	WinExec(run.c_str(), SW_NORMAL);
 }
@@ -172,4 +168,58 @@ char* wcharToChar(const wchar_t* pwchar)
     filePathC -= (sizeof(char) * charCount);
 
     return filePathC;
+}
+
+
+/* 
+ * Since steam://run/<id>//<args>/ protocol doesn't really want to work with arguments.
+ * I used method with calling steam.exe to open app with id 730 and giving him choosed in this program args in normal way.
+ * For some reason steam runs app with also agrs given in app launch options causing small mess with them ¯\_(ツ)_/¯
+ * 
+ * My goal is to get profile steam id and removing given in launch option args for few seconds
+ * and recover them back after the game runs at this moment. Don't see any other wait to fix that.
+ */
+
+int getActiveUserID() {
+	DWORD dwType = REG_DWORD;
+	HKEY hKey = 0;
+	int value;
+	DWORD valueLength = 64;
+	const char* subkey = "SOFTWARE\\Valve\\Steam\\ActiveProcess";
+	RegOpenKey(HKEY_CURRENT_USER, subkey, &hKey);
+	RegQueryValueEx(hKey, "ActiveUser", NULL, &dwType, (LPBYTE)&value, &valueLength);
+
+	return value;
+}
+
+void getConfigFileWithArgs(int appID) {
+	std::string filePath = std::string(global->steamPath).append("\\userdata\\").append(std::to_string(getActiveUserID())).append("\\config\\localconfig.vdf");
+	std::ifstream file(filePath);
+}
+
+bool isSteamRunning()
+{
+
+	PROCESSENTRY32 pe32 = { 0 };
+	HANDLE    hSnap;
+	int       iProccessID;
+	bool      bProcessFound;
+
+	hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	pe32.dwSize = sizeof(PROCESSENTRY32);
+	Process32First(hSnap, &pe32);     // Can throw away, never an actual app
+
+	bProcessFound = false;   //init values
+	iProccessID = 1;
+
+	while (iProccessID)    // go until out of Processes
+	{
+		iProccessID = Process32Next(hSnap, &pe32);
+		if (!strcmp(pe32.szExeFile, "steam.exe"))    // Did we find our process?
+		{
+			bProcessFound = true;
+			iProccessID = 0;
+		}
+	}
+	return !bProcessFound;
 }

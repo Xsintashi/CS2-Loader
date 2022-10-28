@@ -32,7 +32,7 @@ int WINAPI wWinMain(
 	else {
 		// The mutex exists so this is the
 		// the second instance so return.
-		MessageBoxA(nullptr, "You can run only one instance of the Loader", "CS:GO Loader", MB_OK | MB_ICONERROR);
+		MessageBoxA(nullptr, "Only one instance of the game can be running at one time.", "CS:GO Loader", MB_OK | MB_ICONINFORMATION);
 		return 0;
 	}
 
@@ -58,6 +58,10 @@ int WINAPI wWinMain(
 			i++;
 		}
 		if (std::string(global->arguments[i]) == "-silent") {
+			if (isSteamRunning()) {
+				MessageBoxA(nullptr, "Only one instance of the game can be running at one time.", "CS:GO Loader", MB_OK | MB_ICONINFORMATION);
+				return 0;
+			}
 			prepareConfig();
 			startTheGame();
 			GUI::isRunning = false;

@@ -1,5 +1,6 @@
 #pragma once
 #include <d3d9.h>
+#define title "Counter-Strike: Global Offensive Loader"
 
 enum VISIBLITY{
 	HIDE,

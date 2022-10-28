@@ -18,7 +18,6 @@
 #define sameLine ImGui::SameLine();
 #define push(val) ImGui::PushID(val);
 #define pop() ImGui::PopID();
-#define title "Counter-Strike: Global Offensive Loader"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
 	HWND window,
@@ -289,7 +288,6 @@ void GUI::Render() noexcept
 		}
 		ImGui::EndPopup();
 	}
-
 	ImGui::Columns(2, nullptr, false);
 	ImGui::PushItemWidth(48);
 	ImGui::Text("Display");
@@ -538,11 +536,28 @@ void GUI::Render() noexcept
 	//ImGui::Dummy({ 0.f, 16.f });
 	ImGui::Separator();
 	prepareConfig();
-	ImGui::SetNextItemWidth(width - static_cast<int>(ImGui::CalcTextSize("Start").x) - 32);
+
+	std::string buttonText = "Start";
+
+	if (isSteamRunning())
+		buttonText = "Steam not detected";
+	else if (FindWindowW(L"Valve001", nullptr))
+		buttonText = "CS:GO detected";
+
+	ImGui::SetNextItemWidth(width - static_cast<int>(ImGui::CalcTextSize(buttonText.c_str()).x) - 32);
 	ImGui::InputText("##output", &global->gameArgs, ImGuiInputTextFlags_ReadOnly);
 	sameLine
-	if (ImGui::Button("Start")) {
+	if (isSteamRunning() || FindWindowW(L"Valve001", nullptr)) {
+		ImGui::BeginDisabled();
+	}
+	if (ImGui::Button(buttonText.c_str())) {
 		startTheGame();
 	}
+
+	if (isSteamRunning() || FindWindowW(L"Valve001", nullptr)) {
+		ImGui::EndDisabled();
+	}
+
+
 	ImGui::End();
 }
