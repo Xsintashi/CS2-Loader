@@ -14,7 +14,6 @@ int WINAPI wWinMain(
 	PWSTR arguments,
 	int commandShow)
 {
-	//AllocConsole(); freopen("CONOUT$", "w", stdout);
 
 #ifdef DEBUG
 	AllocConsole(); freopen("CONOUT$", "w", stdout);
@@ -25,7 +24,7 @@ int WINAPI wWinMain(
 		MUTEX_ALL_ACCESS, 0, "csgoLoaderInstance");
 
 	if (!hMutex)
-		// Mutex doesnï¿½t exist. This is
+		// Mutex doesn’t exist. This is
 		// the first instance so create
 		// the mutex.
 		hMutex =
@@ -41,6 +40,9 @@ int WINAPI wWinMain(
 	global.emplace(GlobalVars{});
 	
 	global->steamPath = getSteamPath();
+
+	while (global->steamPath.find("/") != std::string::npos)
+		global->steamPath.replace(global->steamPath.find("/"), 1, "\\");
 
 	std::stringstream args(wcharToChar(arguments));
 	std::string argsTemp;
