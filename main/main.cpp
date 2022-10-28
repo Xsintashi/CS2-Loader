@@ -16,6 +16,27 @@ int WINAPI wWinMain(
 {
 	//AllocConsole(); freopen("CONOUT$", "w", stdout);
 
+#ifdef DEBUG
+	AllocConsole(); freopen("CONOUT$", "w", stdout);
+#endif
+
+	// Try to open the mutex.
+	HANDLE hMutex = OpenMutex(
+		MUTEX_ALL_ACCESS, 0, "csgoLoaderInstance");
+
+	if (!hMutex)
+		// Mutex doesn�t exist. This is
+		// the first instance so create
+		// the mutex.
+		hMutex =
+		CreateMutex(0, 0, "csgoLoaderInstance");
+	else {
+		// The mutex exists so this is the
+		// the second instance so return.
+		MessageBoxA(nullptr, "You can run only one instance of the Loader", "CS:GO Loader", MB_OK | MB_ICONERROR);
+		return 0;
+	}
+
 	cfg.emplace(Settings{});
 	global.emplace(GlobalVars{});
 	
