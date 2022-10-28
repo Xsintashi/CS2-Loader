@@ -14,6 +14,7 @@
 #include "../imgui/imgui_stdlib.h"
 #include "../imgui/imgui_impl_dx9.h"
 #include "../imgui/imgui_impl_win32.h"
+#include <fstream>
 
 #define sameLine ImGui::SameLine();
 #define push(val) ImGui::PushID(val);
@@ -269,6 +270,7 @@ void GUI::Render() noexcept
 	ImGui::Begin(title, nullptr, flags);
 	ImGui::Text(title); sameLine ImGui::SetCursorPosX(width  - 76);
 	if (ImGui::Button("C", { 16.f, 16.f })) {
+		ImGui::SetNextWindowPos({ 404.f, 32.f });
 		ImGui::OpenPopup("configWindow");
 	}sameLine
 	if (ImGui::Button("_", { 16.f, 16.f })) windowVisibility(VISIBLITY::MINIMIZE);  sameLine
@@ -276,15 +278,26 @@ void GUI::Render() noexcept
 
 	if (ImGui::BeginPopup("configWindow")) {
 		static std::string configID = "";
+		static std::string notExist = "";
+		static bool exist = true;
 		ImGui::InputText("", &configID);
+		if (!exist) {
+			ImGui::TextWrapped("%s config doesn't exist", notExist.c_str());
+		}
 		if (ImGui::Button("Save")) {
 			Set::Save(configID);
 			ImGui::CloseCurrentPopup();
 		}
 		sameLine
 		if (ImGui::Button("Load")) {
-			Set::Load(configID);
-			ImGui::CloseCurrentPopup();
+			if (std::ifstream file(configID); file.good()) {
+				Set::Load(configID);
+				exist = true;
+				ImGui::CloseCurrentPopup();
+			} else {
+				notExist = configID.size() > 0b1000 ? std::string(configID.substr(0, 5)).append("...") : configID;
+				exist = false;
+			}
 		}
 		ImGui::EndPopup();
 	}
@@ -484,7 +497,7 @@ void GUI::Render() noexcept
 	sameLine
 		ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
-		ImGui::SetTooltip("This launch option will force your game to start up with\mthe default configuration settings for the game");
+		ImGui::SetTooltip("This launch option will force your game to start up with\nthe default configuration settings for the game");
 	pop()
 	push("AAFonts")
 	ImGui::Checkbox("Disable Anti-Aliasing Fonts", &cfg->noAAFonts);
@@ -544,7 +557,7 @@ void GUI::Render() noexcept
 	else if (FindWindowW(L"Valve001", nullptr))
 		buttonText = "CS:GO detected";
 
-	ImGui::SetNextItemWidth(width - static_cast<int>(ImGui::CalcTextSize(buttonText.c_str()).x) - 32);
+	ImGui::SetNextItemWidth(width - static_cast<int>(ImGui::CalcTextSize(buttonText.c_str()).x) - 32.f);
 	ImGui::InputText("##output", &global->gameArgs, ImGuiInputTextFlags_ReadOnly);
 	sameLine
 	if (isSteamRunning() || FindWindowW(L"Valve001", nullptr)) {
