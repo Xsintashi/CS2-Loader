@@ -32,7 +32,7 @@ int WINAPI wWinMain(
 	else {
 		// The mutex exists so this is the
 		// the second instance so return.
-		MessageBoxA(nullptr, "Only one instance of the game can be running at one time.", "CS:GO Loader", MB_OK | MB_ICONINFORMATION);
+		MessageBoxA(nullptr, "Only one instance of the loader can be running at one time.", "CS:GO Loader", MB_OK | MB_ICONINFORMATION);
 		return 0;
 	}
 
