@@ -152,35 +152,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="imgui\imgui_stdlib.h" />
-    <ClInclude Include="main\Global.h" />
-    <ClInclude Include="main\gui.h" />
-    <ClInclude Include="imgui\imconfig.h" />
-    <ClInclude Include="imgui\imgui.h" />
-    <ClInclude Include="imgui\imgui_impl_dx9.h" />
-    <ClInclude Include="imgui\imgui_impl_win32.h" />
-    <ClInclude Include="imgui\imgui_internal.h" />
-    <ClInclude Include="imgui\imstb_rectpack.h" />
-    <ClInclude Include="imgui\imstb_textedit.h" />
-    <ClInclude Include="imgui\imstb_truetype.h" />
-    <ClInclude Include="main\Settings.h" />
-    <ClInclude Include="nlohmann\json.hpp" />
+    <ClInclude Include="Lib\imgui\imgui_stdlib.h" />
+    <ClInclude Include="Source\Global.h" />
+    <ClInclude Include="Source\GUI.h" />
+    <ClInclude Include="Lib\imgui\imconfig.h" />
+    <ClInclude Include="Lib\imgui\imgui.h" />
+    <ClInclude Include="Lib\imgui\imgui_impl_dx9.h" />
+    <ClInclude Include="Lib\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="Lib\imgui\imgui_internal.h" />
+    <ClInclude Include="Lib\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Lib\imgui\imstb_textedit.h" />
+    <ClInclude Include="Lib\imgui\imstb_truetype.h" />
+    <ClInclude Include="Source\Settings.h" />
+    <ClInclude Include="Lib\nlohmann\json.hpp" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="imgui\imgui_stdlib.cpp" />
-    <ClCompile Include="main\gui.cpp" />
-    <ClCompile Include="main\main.cpp" />
-    <ClCompile Include="imgui\imgui.cpp" />
-    <ClCompile Include="imgui\imgui_demo.cpp" />
-    <ClCompile Include="imgui\imgui_draw.cpp" />
-    <ClCompile Include="imgui\imgui_impl_dx9.cpp" />
-    <ClCompile Include="imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="imgui\imgui_tables.cpp" />
-    <ClCompile Include="imgui\imgui_widgets.cpp" />
-    <ClCompile Include="main\Settings.cpp" />
-    <ClCompile Include="main\Utils.cpp" />
-    <ClCompile Include="main\Utils.h" />
+    <ClCompile Include="Lib\imgui\imgui_stdlib.cpp" />
+    <ClCompile Include="Source\GUI.cpp" />
+    <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Lib\imgui\imgui.cpp" />
+    <ClCompile Include="Lib\imgui\imgui_demo.cpp" />
+    <ClCompile Include="Lib\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Lib\imgui\imgui_impl_dx9.cpp" />
+    <ClCompile Include="Lib\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Lib\imgui\imgui_tables.cpp" />
+    <ClCompile Include="Lib\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Settings.cpp" />
+    <ClCompile Include="Source\Utils.cpp" />
+    <ClCompile Include="Source\Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CSGO Loader.aps" />

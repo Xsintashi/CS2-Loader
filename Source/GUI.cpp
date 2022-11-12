@@ -10,10 +10,10 @@
 
 #include <thread> // for cpu threads counter
 
-#include "../imgui/imgui.h"
-#include "../imgui/imgui_stdlib.h"
-#include "../imgui/imgui_impl_dx9.h"
-#include "../imgui/imgui_impl_win32.h"
+#include "../Lib/imgui/imgui.h"
+#include "../Lib/imgui/imgui_stdlib.h"
+#include "../Lib/imgui/imgui_impl_dx9.h"
+#include "../Lib/imgui/imgui_impl_win32.h"
 #include <fstream>
 
 #define sameLine ImGui::SameLine();
