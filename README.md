@@ -6,7 +6,9 @@ Free open-source Loader software for Counter-Strike: Global Offensive game. Comp
 
 # Acknowledgments
 [Cazz](https://github.com/cazzwastaken) - for ImGui Borderless Window Code Snippet
+
 [ocornut](https://github.com/ocornut) - for ImGui itself
+
 [nlohmann](https://github.com/nlohmann) - for json lib
 
 # Common Issues
