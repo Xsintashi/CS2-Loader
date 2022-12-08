@@ -266,7 +266,7 @@ void GUI::Render() noexcept
 	
 	ImGui::SetNextWindowPos({ 0, 0 });
 	ImGui::SetNextWindowSize({ width, height });
-	static int flags = (ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
+	static int flags = (ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 	ImGui::Begin(title, nullptr, flags);
 	ImGui::Text(title); sameLine ImGui::SetCursorPosX(width  - 76);
 	if (ImGui::Button("C", { 16.f, 16.f })) {
@@ -304,7 +304,7 @@ void GUI::Render() noexcept
 	ImGui::Columns(2, nullptr, false);
 	ImGui::PushItemWidth(48);
 	ImGui::Text("Display");
-	ImGui::BeginChild("Display", { 208.f, 80.f }, true, ImGuiWindowFlags_NoScrollbar);
+	ImGui::BeginChild("Display", { 208.f, 80.f }, true, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 	ImGui::Text("Width"); ImGui::SameLine(spacing - 4);
 	ImGui::SetNextItemWidth(48);
 	ImGui::InputInt("##width", &cfg->res.width, 0, 0);
@@ -317,9 +317,9 @@ void GUI::Render() noexcept
 	ImGui::EndChild();
 
 	ImGui::Text("Debug");
-	ImGui::BeginChild("Debug", { 208.f, 176.f }, true, ImGuiWindowFlags_NoScrollbar);
+	ImGui::BeginChild("Debug", { 208.f, 216.f }, true, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-	push("Insecure");
+	push("Insecure")
 	ImGui::Checkbox("Insecure", &cfg->insecure);
 
 	sameLine
@@ -328,7 +328,7 @@ void GUI::Render() noexcept
 		ImGui::SetTooltip("Your game files signatures will not be validated\nand you will be not allowed to join this VAC secure server.");
 	pop()
 
-	push("Allow Debuging");
+	push("Allow Debuging")
 	ImGui::Checkbox("Allow Debuging", &cfg->allowDebug);
 	sameLine
 	ImGui::TextDisabled("?");
@@ -336,7 +336,7 @@ void GUI::Render() noexcept
 		ImGui::SetTooltip("Allows to debug the game.");
 	pop()
 
-	push("Log Console");
+	push("Log Console")
 	ImGui::Checkbox("Log Console", &cfg->logConsole);
 	sameLine
 	ImGui::TextDisabled("?");
@@ -344,16 +344,31 @@ void GUI::Render() noexcept
 		ImGui::SetTooltip("Game will log console in ../csgo/console.log.");
 	pop()
 
-	push("Show Console");
+	push("Show Console")
 	ImGui::Checkbox("Console on Startup", &cfg->consoleOnStartup);
-
 	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("Makes the game start with the console opened.");
 	pop()
 
-	push("Hijack");
+	push("To Console")
+		ImGui::Checkbox("To Console", &cfg->toConsole);
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Starts the engine directly in the console,\nunless a map is specified with +map.");
+	pop()
+
+	push("Crashdialog")
+		ImGui::Checkbox("No Crash Dialog", &cfg->noCrashDialog);
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Suppresses some memory could not be read unhandled errors.");
+	pop()
+
+	push("Hijack")
 	ImGui::Checkbox("Hijack", &cfg->hijack);
 	sameLine
 	ImGui::TextDisabled("?");
@@ -361,16 +376,16 @@ void GUI::Render() noexcept
 		ImGui::SetTooltip("Hijacks the game.");
 	pop()
 
-	push("Dev");
+	push("Dev")
 	ImGui::Checkbox("Dev", &cfg->dev);
 
 	sameLine
 	ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
-		ImGui::SetTooltip("dev.");
+		ImGui::SetTooltip("Enables developer mode. Also disables the automatic\nloading of menu background maps and stops the quit dialog from appearing on exit.");
 	pop()
 
-	push("Game");
+	push("Game")
 	ImGui::Text("Game"); ImGui::SameLine(spacing - 8);
 	ImGui::SetNextItemWidth(64);
 	ImGui::InputText("##game", cfg->game, sizeof(cfg->game));
@@ -382,7 +397,7 @@ void GUI::Render() noexcept
 
 	ImGui::EndChild();
 
-	push("Threads");
+	push("Threads")
 	ImGui::Text("Threads"); ImGui::SameLine(spacing);
 	ImGui::InputInt("##threads", &cfg->threads, 0, 0);
 	sameLine
@@ -392,7 +407,16 @@ void GUI::Render() noexcept
 	cfg->threads = std::clamp(cfg->threads, 0, processorCount);
 	pop()
 
-	push("Tickrate");
+	push("heapsize")
+	ImGui::Text("Heapsize"); ImGui::SameLine(spacing);
+	ImGui::InputInt("##heap", &cfg->heapsize, 0, 0);
+	sameLine
+		ImGui::TextDisabled("?");
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("Specifies the heapsize (in kilobytes) which the game will use.");
+	pop()
+
+	push("Tickrate")
 	ImGui::Text("Tickrate"); ImGui::SameLine(spacing);
 	ImGui::InputInt("##tickrate", &cfg->tickrate, 0, 0);
 	sameLine
@@ -401,7 +425,7 @@ void GUI::Render() noexcept
 		ImGui::SetTooltip("Sets the tick rate of any \"Offline With Bots\" games,\nor any servers that you host via your client.");
 	pop()
 
-	push("Refresh");
+	push("Refresh")
 	ImGui::Text("Refresh"); ImGui::SameLine(spacing);
 	ImGui::InputInt("##refresh", &cfg->refresh, 0, 0);
 	sameLine
@@ -413,7 +437,7 @@ void GUI::Render() noexcept
 	ImGui::NextColumn();				/*					NEXT COLUMN					*/
 
 	ImGui::Dummy({ 0.f, 16.f });
-	push("Config");
+	push("Config")
 	ImGui::Text("Execute Config"); ImGui::SameLine(spacing);
 	ImGui::SetNextItemWidth(120);
 	ImGui::InputText("##exec", cfg->execConfig, sizeof(cfg->execConfig));
@@ -423,7 +447,7 @@ void GUI::Render() noexcept
 		ImGui::SetTooltip("This launch option will execute all commands a specified file.");
 	pop()
 
-	push("Language");
+	push("Language")
 	ImGui::Text("Language"); ImGui::SameLine(spacing);
 	ImGui::SetNextItemWidth(120);
 	ImGui::InputText("##lang", cfg->language, sizeof(cfg->language));
@@ -433,7 +457,7 @@ void GUI::Render() noexcept
 		ImGui::SetTooltip("Makes CS:GO start in the language that you specified.");
 	pop()
 
-	push("Server");
+	push("Server")
 	ImGui::Text("Server"); ImGui::SameLine(spacing);
 	ImGui::SetNextItemWidth(120);
 	ImGui::InputText("##server", cfg->serverConnect, sizeof(cfg->serverConnect));
@@ -546,7 +570,6 @@ void GUI::Render() noexcept
 
 	ImGui::Columns(1);
 
-	//ImGui::Dummy({ 0.f, 16.f });
 	ImGui::Separator();
 	prepareConfig();
 

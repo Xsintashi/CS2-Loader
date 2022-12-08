@@ -18,6 +18,7 @@ void Set::Load(std::string load) noexcept {
 	l("Tickrate", cfg->tickrate)
 	l("Refresh", cfg->refresh)
 	l("Threads", cfg->threads)
+	l("Heapsize", cfg->heapsize)
 
 	ll("Display", "Width", cfg->res.width)
 	ll("Display", "Height", cfg->res.height)
@@ -48,6 +49,8 @@ void Set::Load(std::string load) noexcept {
 	l("NO Preload", cfg->noPreload)
 	l("NO AA Fonts", cfg->noAAFonts)
 	l("NO Browser", cfg->noBrowser)
+	l("To Console", cfg->toConsole)
+	l("No Crash Dialog", cfg->noCrashDialog)
 }
 
 void Set::Save(std::string save) noexcept {
@@ -55,8 +58,9 @@ void Set::Save(std::string save) noexcept {
 	w("Tickrate",  cfg->tickrate)
 	w("Refresh",  cfg->refresh)
 	w("Threads",  cfg->threads)
+	w("Heapsize",  cfg->heapsize)
 
-	js["Display"]=  {
+	js["Display"] = {
 		{ "Width" , cfg->res.width },
 		{ "Height" , cfg->res.height },
 		{ "Mode" , cfg->res.displayMode }
@@ -87,8 +91,9 @@ void Set::Save(std::string save) noexcept {
 	w("NO Preload",  cfg->noPreload)
 	w("NO AA Fonts",  cfg->noAAFonts)
 	w("NO Browser",  cfg->noBrowser)
+	w("To Console", cfg->toConsole)
+	w("No Crash Dialog", cfg->noCrashDialog)
 
-	// write prettified JSON to another file
 	std::ofstream out(save);
 	out << std::setw(4) << js << std::endl;
 }

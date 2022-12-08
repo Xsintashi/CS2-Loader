@@ -58,6 +58,12 @@ void prepareConfig() {
 	if (cfg->consoleOnStartup)
 		options += "-console ";
 
+	if (cfg->toConsole)
+		options += "-toconsole ";
+
+	if (cfg->noCrashDialog)
+		options += "-nocrashdialog ";
+
 	if (cfg->hijack)
 		options += "-hijack ";
 
@@ -114,6 +120,9 @@ void prepareConfig() {
 
 	if (cfg->threads)
 		options += std::string("-threads ").append(std::to_string(cfg->threads)).append(" ");
+
+	if (cfg->heapsize)
+		options += std::string("-heapsize ").append(std::to_string(cfg->heapsize)).append(" ");
 
 	if (cfg->tickrate)
 		options += std::string("-tickrate ").append(std::to_string(cfg->tickrate)).append(" ");

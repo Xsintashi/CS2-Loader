@@ -16,7 +16,8 @@ public:
 	int
 		tickrate = 0, //64 || 128
 		refresh = 0, // 60 || 144
-		threads = 0;
+		threads = 0,
+		heapsize = 0;
 
 	struct Resolution {
 		int
@@ -45,7 +46,9 @@ public:
 		noHLTV = false,
 		noPreload = false,
 		noAAFonts = false,
-		noBrowser = false;
+		noBrowser = false,
+		toConsole = false,
+		noCrashDialog = false;
 };
 
 namespace Set {
