@@ -14,3 +14,4 @@ Free open-source Loader software for Counter-Strike: Global Offensive game. Comp
 # Common Issues
 
  * Since steam://run/<id>//<args>/ protocol doesn't really want to work with arguments. I used method with calling steam.exe to open app with id 730 and giving him choosed in this program args in normal way. For some reason steam runs app with also agrs given in app launch options causing small mess with them ¯\\_(ツ)\_/¯
+ * If program crashes while loading a config, try make new one or update older one.
