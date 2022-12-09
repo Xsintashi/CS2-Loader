@@ -20,14 +20,14 @@ int WINAPI wWinMain(
 #endif
 
 	// Try to open the mutex.
-	HANDLE hMutex = OpenMutex(
+	HANDLE mutex = OpenMutex(
 		MUTEX_ALL_ACCESS, 0, "csgoLoaderInstance");
 
-	if (!hMutex)
+	if (!mutex)
 		// Mutex doesn’t exist. This is
 		// the first instance so create
 		// the mutex.
-		hMutex =
+		mutex =
 		CreateMutex(0, 0, "csgoLoaderInstance");
 	else {
 		// The mutex exists so this is the
@@ -54,7 +54,7 @@ int WINAPI wWinMain(
 
 	for (unsigned int i = 0; i < global->arguments.size(); ++i) {
 		if (std::string(global->arguments[i]) == "-load") {
-			Set::Load(global->arguments[i + 1]);
+			cfg->Load(global->arguments[i + 1]);
 			i++;
 		}
 		if (std::string(global->arguments[i]) == "-silent") {
@@ -74,7 +74,7 @@ int WINAPI wWinMain(
 		}
 	}
 
-	// create gui
+	// Create GUI
 	GUI::CreateHWindow("Counter-Strike: Global Offensive Loader");
 	GUI::CreateDevice();
 	GUI::CreateImGui();
@@ -87,7 +87,7 @@ int WINAPI wWinMain(
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
 
-	// destroy gui
+	// Destroy GUI
 	GUI::DestroyImGui();
 	GUI::DestroyDevice();
 	GUI::DestroyHWindow();

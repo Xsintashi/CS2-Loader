@@ -3,10 +3,17 @@
 #include <string>
 #include <optional>
 #include <vector>
+#include <filesystem>
+
 #include "../Lib/nlohmann/json.hpp"
 
 class Settings {
 public:
+	Settings() noexcept;
+	void openConfigDir() const noexcept;
+	void Save(std::string save = "empty") noexcept;
+	void Load(std::string load = "empty") noexcept;
+
 	char
 		language[32] = "", //e.g english
 		game[32] = "", //csgo
@@ -49,11 +56,9 @@ public:
 		noBrowser = false,
 		toConsole = false,
 		noCrashDialog = false;
+private:
+	std::filesystem::path path;
+	void createConfigDir() const noexcept;
 };
-
-namespace Set {
-	void Save(std::string save = "empty") noexcept;
-	void Load(std::string load = "empty") noexcept;
-}
 
 inline std::optional<Settings> cfg;

@@ -1,4 +1,5 @@
 #include "Settings.h"
+#include "Global.h"
 #include <fstream>
 #include <Windows.h>
 #include <ShlObj.h>
@@ -9,11 +10,17 @@ using json = nlohmann::json;
 #define l(name, valueName) valueName = js[name];
 #define ll(name, name2, valueName) valueName = js[name][name2];
 
-json js;
+void Settings::Load(std::string load) noexcept {
 
-void Set::Load(std::string load) noexcept {
-	std::ifstream i(load);
-	i >> js;
+	json js;
+
+	if (std::ifstream in{ cfg->path / load }; in.good()) {
+		js = json::parse(in, nullptr, false, true);
+		if (js.is_discarded())
+			return;
+	} else {
+		return;
+	}
 
 	l("Tickrate", cfg->tickrate)
 	l("Refresh", cfg->refresh)
@@ -53,7 +60,9 @@ void Set::Load(std::string load) noexcept {
 	l("No Crash Dialog", cfg->noCrashDialog)
 }
 
-void Set::Save(std::string save) noexcept {
+void Settings::Save(std::string save) noexcept {
+
+	json js;
 
 	w("Tickrate",  cfg->tickrate)
 	w("Refresh",  cfg->refresh)
@@ -94,6 +103,33 @@ void Set::Save(std::string save) noexcept {
 	w("To Console", cfg->toConsole)
 	w("No Crash Dialog", cfg->noCrashDialog)
 
-	std::ofstream out(save);
-	out << std::setw(4) << js << std::endl;
+	createConfigDir();
+	if (std::ofstream out{ path / save }; out.good())
+		out << std::setw(2) << js;
+}
+
+[[nodiscard]] static std::filesystem::path buildConfigsFolderPath() noexcept
+{
+	std::filesystem::path path;
+
+	if (PWSTR pathToAppData; SUCCEEDED(SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, nullptr, &pathToAppData))) {
+		path = pathToAppData;
+		CoTaskMemFree(pathToAppData);
+	}
+
+	path /= "CSGO Loader";
+	return path;
+}
+
+void Settings::createConfigDir() const noexcept {
+	std::error_code ec; std::filesystem::create_directory(path, ec);
+}
+
+void Settings::openConfigDir() const noexcept {
+	createConfigDir();
+	ShellExecuteW(nullptr, L"open", path.wstring().c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+}
+
+Settings::Settings() noexcept : path{ buildConfigsFolderPath() } {
+	createConfigDir();
 }

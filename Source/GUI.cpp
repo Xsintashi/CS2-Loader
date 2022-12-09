@@ -285,19 +285,23 @@ void GUI::Render() noexcept
 			ImGui::TextWrapped("%s config doesn't exist", notExist.c_str());
 		}
 		if (ImGui::Button("Save")) {
-			Set::Save(configID);
+			cfg->Save(configID);
 			ImGui::CloseCurrentPopup();
 		}
 		sameLine
 		if (ImGui::Button("Load")) {
 			if (std::ifstream file(configID); file.good()) {
-				Set::Load(configID);
+				cfg->Load(configID);
 				exist = true;
 				ImGui::CloseCurrentPopup();
 			} else {
 				notExist = configID.size() > 0b1000 ? std::string(configID.substr(0, 5)).append("...") : configID;
 				exist = false;
 			}
+		}
+		sameLine
+		if (ImGui::Button("Open Config Folder")) {
+			cfg->openConfigDir();
 		}
 		ImGui::EndPopup();
 	}
@@ -365,7 +369,7 @@ void GUI::Render() noexcept
 	sameLine
 		ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
-		ImGui::SetTooltip("Suppresses some memory could not be read unhandled errors.");
+		ImGui::SetTooltip("Suppresses some \"memory could not be read\" unhandled errors.");
 	pop()
 
 	push("Hijack")
@@ -439,7 +443,7 @@ void GUI::Render() noexcept
 	ImGui::Dummy({ 0.f, 16.f });
 	push("Config")
 	ImGui::Text("Execute Config"); ImGui::SameLine(spacing);
-	ImGui::SetNextItemWidth(120);
+	ImGui::SetNextItemWidth(128);
 	ImGui::InputText("##exec", cfg->execConfig, sizeof(cfg->execConfig));
 	sameLine
 	ImGui::TextDisabled("?");
@@ -449,7 +453,7 @@ void GUI::Render() noexcept
 
 	push("Language")
 	ImGui::Text("Language"); ImGui::SameLine(spacing);
-	ImGui::SetNextItemWidth(120);
+	ImGui::SetNextItemWidth(128);
 	ImGui::InputText("##lang", cfg->language, sizeof(cfg->language));
 	sameLine
 	ImGui::TextDisabled("?");
@@ -459,7 +463,7 @@ void GUI::Render() noexcept
 
 	push("Server")
 	ImGui::Text("Server"); ImGui::SameLine(spacing);
-	ImGui::SetNextItemWidth(120);
+	ImGui::SetNextItemWidth(128);
 	ImGui::InputText("##server", cfg->serverConnect, sizeof(cfg->serverConnect));
 	sameLine
 		ImGui::TextDisabled("?");
