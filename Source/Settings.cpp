@@ -1,5 +1,4 @@
 #include "Settings.h"
-#include "Global.h"
 #include <fstream>
 #include <Windows.h>
 #include <ShlObj.h>

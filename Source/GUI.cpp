@@ -310,13 +310,13 @@ void GUI::Render() noexcept
 	ImGui::Text("Display");
 	ImGui::BeginChild("Display", { 208.f, 80.f }, true, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 	ImGui::Text("Width"); ImGui::SameLine(spacing - 4);
-	ImGui::SetNextItemWidth(48);
+	ImGui::SetNextItemWidth(48.f);
 	ImGui::InputInt("##width", &cfg->res.width, 0, 0);
 	ImGui::Text("Height"); ImGui::SameLine(spacing - 4);
-	ImGui::SetNextItemWidth(48);
+	ImGui::SetNextItemWidth(48.f);
 	ImGui::InputInt("##height", &cfg->res.height, 0, 0);
 	ImGui::Text("Mode"); ImGui::SameLine(spacing - 4);
-	ImGui::SetNextItemWidth(96);
+	ImGui::SetNextItemWidth(96.f);
 	ImGui::Combo("##display", &cfg->res.displayMode, "Default\0Windowed\0Fullscreen\0Windowed Fullscreen\0");
 	ImGui::EndChild();
 
@@ -391,7 +391,7 @@ void GUI::Render() noexcept
 
 	push("Game")
 	ImGui::Text("Game"); ImGui::SameLine(spacing - 8);
-	ImGui::SetNextItemWidth(64);
+	ImGui::SetNextItemWidth(64.f);
 	ImGui::InputText("##game", cfg->game, sizeof(cfg->game));
 	sameLine
 	ImGui::TextDisabled("?");
@@ -443,7 +443,7 @@ void GUI::Render() noexcept
 	ImGui::Dummy({ 0.f, 16.f });
 	push("Config")
 	ImGui::Text("Execute Config"); ImGui::SameLine(spacing);
-	ImGui::SetNextItemWidth(128);
+	ImGui::SetNextItemWidth(128.f);
 	ImGui::InputText("##exec", cfg->execConfig, sizeof(cfg->execConfig));
 	sameLine
 	ImGui::TextDisabled("?");
@@ -453,7 +453,7 @@ void GUI::Render() noexcept
 
 	push("Language")
 	ImGui::Text("Language"); ImGui::SameLine(spacing);
-	ImGui::SetNextItemWidth(128);
+	ImGui::SetNextItemWidth(128.f);
 	ImGui::InputText("##lang", cfg->language, sizeof(cfg->language));
 	sameLine
 	ImGui::TextDisabled("?");
@@ -463,7 +463,7 @@ void GUI::Render() noexcept
 
 	push("Server")
 	ImGui::Text("Server"); ImGui::SameLine(spacing);
-	ImGui::SetNextItemWidth(128);
+	ImGui::SetNextItemWidth(128.f);
 	ImGui::InputText("##server", cfg->serverConnect, sizeof(cfg->serverConnect));
 	sameLine
 		ImGui::TextDisabled("?");
