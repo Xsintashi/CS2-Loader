@@ -483,7 +483,7 @@ void GUI::Render() noexcept
 	sameLine
 		ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
-		ImGui::SetTooltip("It will make the CS:GO process higher priority, and therefore, your computer will give resources (RAM, CPU, etc)\nto CS:GO instead of any other processes that you are running.");
+		ImGui::SetTooltip("It will make the CS:GO process higher priority, and therefore, your computer will give\nresources (RAM, CPU, etc)to CS:GO instead of any other processes that you are running.");
 	pop()
 	push("vertex")
 	ImGui::Checkbox("Limit Vertex Shaders", &cfg->limitVSConst);
@@ -567,7 +567,7 @@ void GUI::Render() noexcept
 	sameLine
 		ImGui::TextDisabled("?");
 	if (ImGui::IsItemHovered())
-		ImGui::SetTooltip("	This launch option makes the game drop all joystick support,\nwhich can decrease the amount of RAM it uses.");
+		ImGui::SetTooltip("This launch option makes the game drop all joystick support,\nwhich can decrease the amount of RAM it uses.");
 	pop()
 
 	ImGui::PopItemWidth();
