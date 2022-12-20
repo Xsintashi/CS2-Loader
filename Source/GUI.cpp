@@ -108,16 +108,16 @@ void GUI::CreateHWindow(const char* windowName) noexcept
 	windowClass.hCursor = 0;
 	windowClass.hbrBackground = 0;
 	windowClass.lpszMenuName = 0;
-	windowClass.lpszClassName = "class001";
+	windowClass.lpszClassName = "xs9";
 	windowClass.hIconSm = 0;
 
 	RegisterClassEx(&windowClass);
 
 	window = CreateWindowEx(
 		0,
-		"class001",
+		"xs9",
 		windowName,
-		WS_POPUP, //WS_SYSMENU with win10 title bar
+		WS_POPUP,
 		100,
 		100,
 		width,
@@ -262,6 +262,22 @@ void GUI::EndRender() noexcept
 		ResetDevice();
 }
 
+void pushRemoveButtonStyle() {
+	if (cfg->guiStyle) {
+		ImGui::PushStyleColor(ImGuiCol_CustomButtonOne, ImVec4{ 0.f, 0.f, 0.f, 0.f });
+		ImGui::PushStyleColor(ImGuiCol_CustomButtonTwo, ImVec4{ 0.f, 0.f, 0.f, 0.f });
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.f, 0.f, 0.f, 0.f });
+	}
+}
+
+void popRemoveButtonStyle() {
+	if (cfg->guiStyle) {
+		ImGui::PopStyleColor();
+		ImGui::PopStyleColor();
+		ImGui::PopStyleColor();
+	}
+}
+
 void GUI::Render() noexcept
 {
 	constexpr int spacing = 112;
@@ -272,6 +288,7 @@ void GUI::Render() noexcept
 	constexpr int flags = (ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 	ImGui::Begin(title, nullptr, flags);
 	ImGui::Text(title); sameLine ImGui::SetCursorPosX(width  - 98);
+	pushRemoveButtonStyle();
 	if (ImGui::Button("S", { 16.f, 16.f })) {
 		cfg->guiStyle = !cfg->guiStyle;
 		if (cfg->guiStyle)
@@ -279,14 +296,21 @@ void GUI::Render() noexcept
 		else
 			ImGui::StyleColorsGoldSourceVGUI();
 	}
+	popRemoveButtonStyle();
 	sameLine
+	pushRemoveButtonStyle();
 	if (ImGui::Button("C", { 16.f, 16.f })) {
 		ImGui::SetNextWindowPos({ 404.f, 32.f });
 		ImGui::OpenPopup("configWindow");
 	}
+	popRemoveButtonStyle();
 	sameLine
+	pushRemoveButtonStyle();
 	if (ImGui::Button("_", { 16.f, 16.f })) windowVisibility(VISIBLITY::MINIMIZE);  sameLine
+	popRemoveButtonStyle();
+	pushRemoveButtonStyle();
 	if (ImGui::Button("X", { 16.f, 16.f })) isRunning = false;
+	popRemoveButtonStyle();
 	if (ImGui::BeginPopup("configWindow")) {
 		static std::string configID = "";
 		static std::string notExist = "";
