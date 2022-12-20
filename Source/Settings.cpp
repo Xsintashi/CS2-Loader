@@ -21,6 +21,8 @@ void Settings::Load(std::string load) noexcept {
 		return;
 	}
 
+	l("Style", cfg->guiStyle)
+
 	l("Tickrate", cfg->tickrate)
 	l("Refresh", cfg->refresh)
 	l("Threads", cfg->threads)
@@ -62,6 +64,8 @@ void Settings::Load(std::string load) noexcept {
 void Settings::Save(std::string save) noexcept {
 
 	json js;
+
+	w("Style", cfg->guiStyle)
 
 	w("Tickrate",  cfg->tickrate)
 	w("Refresh",  cfg->refresh)

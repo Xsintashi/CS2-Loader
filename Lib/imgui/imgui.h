@@ -317,10 +317,8 @@ namespace ImGui
 
 
     // Styles
-    IMGUI_API void          StyleColorsVGUI(ImGuiStyle* dst = NULL);    // xs9
-    IMGUI_API void          StyleColorsDark(ImGuiStyle* dst = NULL);    // new, recommended style (default)
-    IMGUI_API void          StyleColorsLight(ImGuiStyle* dst = NULL);   // best used with borders and a custom, thicker font
-    IMGUI_API void          StyleColorsClassic(ImGuiStyle* dst = NULL); // classic imgui style
+    IMGUI_API void          StyleColorsGoldSourceVGUI(ImGuiStyle* dst = NULL);    // xs9
+    IMGUI_API void          StyleColorsSourceVGUI(ImGuiStyle* dst = NULL);    // xs9
 
     // Windows
     // - Begin() = push window to the stack and start appending to it. End() = pop window from the stack.
@@ -1506,6 +1504,8 @@ enum ImGuiCol_
     ImGuiCol_NavWindowingHighlight, // Highlight window when using CTRL+TAB
     ImGuiCol_NavWindowingDimBg,     // Darken/colorize entire screen behind the CTRL+TAB window list, when active
     ImGuiCol_ModalWindowDimBg,      // Darken/colorize entire screen behind a modal window, when one is active
+    ImGuiCol_CustomButtonOne,
+    ImGuiCol_CustomButtonTwo,
     ImGuiCol_COUNT
 };
 

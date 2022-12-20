@@ -34,6 +34,7 @@ public:
 	}res;
 
 	bool
+		guiStyle = true, // false = GoldSrc Style | true = Source Style
 		thirdParty = false,
 		insecure = false,
 		allowDebug = false,

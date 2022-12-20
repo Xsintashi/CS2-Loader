@@ -201,7 +201,10 @@ void GUI::CreateImGui() noexcept
 
 	io.IniFilename = NULL;
 
-	ImGui::StyleColorsVGUI();
+	if(cfg->guiStyle)
+		ImGui::StyleColorsSourceVGUI();
+	else
+		ImGui::StyleColorsGoldSourceVGUI();
 
 	ImGui_ImplWin32_Init(window);
 	ImGui_ImplDX9_Init(device);
@@ -268,19 +271,29 @@ void GUI::Render() noexcept
 	ImGui::SetNextWindowSize({ width, height });
 	constexpr int flags = (ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 	ImGui::Begin(title, nullptr, flags);
-	ImGui::Text(title); sameLine ImGui::SetCursorPosX(width  - 76);
+	ImGui::Text(title); sameLine ImGui::SetCursorPosX(width  - 98);
+	if (ImGui::Button("S", { 16.f, 16.f })) {
+		cfg->guiStyle = !cfg->guiStyle;
+		if (cfg->guiStyle)
+			ImGui::StyleColorsSourceVGUI();
+		else
+			ImGui::StyleColorsGoldSourceVGUI();
+	}
+	sameLine
 	if (ImGui::Button("C", { 16.f, 16.f })) {
 		ImGui::SetNextWindowPos({ 404.f, 32.f });
 		ImGui::OpenPopup("configWindow");
-	}sameLine
+	}
+	sameLine
 	if (ImGui::Button("_", { 16.f, 16.f })) windowVisibility(VISIBLITY::MINIMIZE);  sameLine
 	if (ImGui::Button("X", { 16.f, 16.f })) isRunning = false;
-
 	if (ImGui::BeginPopup("configWindow")) {
 		static std::string configID = "";
 		static std::string notExist = "";
 		static bool exist = true;
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::GetColorU32(ImGuiCol_ChildBg));
 		ImGui::InputText("", &configID);
+		ImGui::PopStyleColor();
 		if (!exist) {
 			ImGui::TextWrapped("%s config doesn't exist", notExist.c_str());
 		}
@@ -305,6 +318,8 @@ void GUI::Render() noexcept
 		}
 		ImGui::EndPopup();
 	}
+	ImGui::SetCursorPosY(32.f);
+	ImGui::BeginChild("Main", { width - 16.f, height - 64.f }, true);
 	ImGui::Columns(2, nullptr, false);
 	ImGui::PushItemWidth(48);
 	ImGui::Text("Display");
@@ -571,10 +586,8 @@ void GUI::Render() noexcept
 	pop()
 
 	ImGui::PopItemWidth();
-
 	ImGui::Columns(1);
-
-	ImGui::Separator();
+	ImGui::EndChild();
 	prepareConfig();
 
 	std::string buttonText = "Start";
@@ -584,8 +597,10 @@ void GUI::Render() noexcept
 	else if (FindWindowW(L"Valve001", nullptr))
 		buttonText = "CS:GO detected";
 
-	ImGui::SetNextItemWidth(width - static_cast<int>(ImGui::CalcTextSize(buttonText.c_str()).x) - 32.f);
+	ImGui::SetNextItemWidth(width - static_cast<int>(ImGui::CalcTextSize(buttonText.c_str()).x) - 34.f);
+	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::GetColorU32(ImGuiCol_ChildBg));
 	ImGui::InputText("##output", &global->gameArgs, ImGuiInputTextFlags_ReadOnly);
+	ImGui::PopStyleColor();
 	sameLine
 	if (isSteamRunning() || FindWindowW(L"Valve001", nullptr)) {
 		ImGui::BeginDisabled();

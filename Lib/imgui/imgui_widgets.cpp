@@ -147,8 +147,6 @@ static ImVec2           InputTextCalcTextSizeW(const ImWchar* text_begin, const 
 // - BulletTextV()
 //-------------------------------------------------------------------------
 
-const ImU32 colWhite = 0xFF87937F; const ImU32 colBlack = 0xFF4B5743; const ImU32 colWhiteText = 0xFF85917D;
-
 void ImGui::TextEx(const char* text, const char* text_end, ImGuiTextFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
@@ -697,15 +695,17 @@ bool ImGui::ButtonEx(const char* label, const ImVec2& size_arg, ImGuiButtonFlags
     bool hovered, held;
     bool pressed = ButtonBehavior(bb, id, &hovered, &held, flags);
 
+    const ImU32 colOne = GetColorU32(ImGuiCol_CustomButtonOne);
+    const ImU32 colTwo = GetColorU32(ImGuiCol_CustomButtonTwo);
 
     if (!held) {
-        RenderFrame(bb.Min - ImVec2(1, 1), bb.Max - ImVec2(0, 0), colWhite, true, style.FrameRounding);
-        RenderFrame(bb.Min + ImVec2(0, 0), bb.Max + ImVec2(1, 1), colBlack, true, style.FrameRounding);
+        RenderFrame(bb.Min - ImVec2(1, 1), bb.Max - ImVec2(0, 0), colTwo, true, style.FrameRounding);
+        RenderFrame(bb.Min + ImVec2(0, 0), bb.Max + ImVec2(1, 1), colOne, true, style.FrameRounding);
     }
     else
     {
-        RenderFrame(bb.Min - ImVec2(1, 1), bb.Max - ImVec2(0, 0), colBlack, true, style.FrameRounding);
-        RenderFrame(bb.Min + ImVec2(0, 0), bb.Max + ImVec2(1, 1), colWhite, true, style.FrameRounding);
+        RenderFrame(bb.Min - ImVec2(1, 1), bb.Max - ImVec2(0, 0), colTwo, true, style.FrameRounding);
+        RenderFrame(bb.Min + ImVec2(0, 0), bb.Max + ImVec2(1, 1), colOne, true, style.FrameRounding);
     }
 
     const ImU32 col = GetColorU32(ImGuiCol_Button);
