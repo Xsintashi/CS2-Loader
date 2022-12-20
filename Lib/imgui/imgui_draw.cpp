@@ -277,7 +277,7 @@ void ImGui::StyleColorsSourceVGUI(ImGuiStyle* dst) {
     colors[ImGuiCol_Separator] = ImVec4(.17f, 0.17f, 0.17, 1.f);
     colors[ImGuiCol_SliderGrabActive] = ImVec4(0.424f, 0.424f, 0.424f, 1.f);
     colors[ImGuiCol_SliderGrab] = ImVec4(0.424f, 0.424f, 0.424f, 1.f);
-    colors[ImGuiCol_TextSelectedBg] = ImVec4(0.463f, 0.463f, 0.463f, 1.f);
+    colors[ImGuiCol_TextSelectedBg] = ImVec4(0.243f, 0.243f, 0.243f, 1.00f);
     colors[ImGuiCol_PopupBg] = ImVec4(0.635f, 0.635f, 0.635f, 1.f);
     colors[ImGuiCol_CustomButtonOne] = ImVec4(0.17f, 0.17f, 0.17f, 1.f);
     colors[ImGuiCol_CustomButtonTwo] = ImVec4(0.7f, 0.7f, 0.7f, 1.f);

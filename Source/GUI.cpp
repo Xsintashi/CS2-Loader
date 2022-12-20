@@ -95,6 +95,12 @@ void GUI::windowVisibility(int mode) noexcept {
 	ShowWindow(window, mode);
 }
 
+void updateStyle() {
+	if (cfg->guiStyle)
+		ImGui::StyleColorsSourceVGUI();
+	else
+		ImGui::StyleColorsGoldSourceVGUI();
+}
 
 void GUI::CreateHWindow(const char* windowName) noexcept
 {
@@ -201,10 +207,7 @@ void GUI::CreateImGui() noexcept
 
 	io.IniFilename = NULL;
 
-	if(cfg->guiStyle)
-		ImGui::StyleColorsSourceVGUI();
-	else
-		ImGui::StyleColorsGoldSourceVGUI();
+	updateStyle();
 
 	ImGui_ImplWin32_Init(window);
 	ImGui_ImplDX9_Init(device);
@@ -316,8 +319,11 @@ void GUI::Render() noexcept
 		static std::string notExist = "";
 		static bool exist = true;
 		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::GetColorU32(ImGuiCol_ChildBg));
+		if(cfg->guiStyle)
+			ImGui::PushStyleColor(ImGuiCol_TextSelectedBg, ImVec4(0.463f, 0.463f, 0.463f, 1.f));
+		ImGui::SetNextItemWidth(223.f);
 		ImGui::InputText("", &configID);
-		ImGui::PopStyleColor();
+		ImGui::PopStyleColor(cfg->guiStyle ? 2 : 1);
 		if (!exist) {
 			ImGui::TextWrapped("%s config doesn't exist", notExist.c_str());
 		}
@@ -329,6 +335,7 @@ void GUI::Render() noexcept
 		if (ImGui::Button("Load")) {
 			if (std::ifstream file(configID); file.good()) {
 				cfg->Load(configID);
+				updateStyle();
 				exist = true;
 				ImGui::CloseCurrentPopup();
 			} else {
@@ -623,8 +630,11 @@ void GUI::Render() noexcept
 
 	ImGui::SetNextItemWidth(width - static_cast<int>(ImGui::CalcTextSize(buttonText.c_str()).x) - 34.f);
 	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImGui::GetColorU32(ImGuiCol_ChildBg));
+	if (cfg->guiStyle)
+		ImGui::PushStyleColor(ImGuiCol_TextSelectedBg, ImVec4(0.463f, 0.463f, 0.463f, 1.f));
+
 	ImGui::InputText("##output", &global->gameArgs, ImGuiInputTextFlags_ReadOnly);
-	ImGui::PopStyleColor();
+	ImGui::PopStyleColor(cfg->guiStyle ? 2 : 1);
 	sameLine
 	if (isSteamRunning() || FindWindowW(L"Valve001", nullptr)) {
 		ImGui::BeginDisabled();
